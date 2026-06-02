@@ -1,34 +1,73 @@
 import {
   Component,
   Input,
-  signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
 
 /**
- * AccordionItemComponent — Standalone
+ * Accessible accordion item built on native `<details>` / `<summary>` semantics.
  *
- * Acordeón accesible usando <details>/<summary> nativos.
- * - Sin JavaScript extra: el browser maneja el toggle
- * - SSR-safe: el estado open/closed se renderiza en el HTML del servidor
- * - Animación de chevron con CSS puro (transform rotate)
+ * @description
+ * Uses browser-native disclosure elements to avoid custom ARIA role management:
+ * - `<details>` provides the expand/collapse state machine natively.
+ * - `<summary>` is inherently keyboard-accessible (Enter / Space) and announces
+ *   expanded state to assistive technologies via the `open` DOM property.
+ * - No JavaScript is required for the toggle behaviour.
+ *
+ * **SSR safety:** the `[open]` property binding serialises to the `open`
+ * HTML attribute in server-generated markup, so the initial open/closed state
+ * is correct before hydration.
+ *
+ * **Animation:** the chevron icon rotates 180° via a CSS sibling selector on
+ * `details[open]` — zero JS and SSR-safe.
+ *
+ * @example
+ * ```html
+ * <app-accordion-item itemId="desc" title="Descripción">
+ *   <p>Content projected here.</p>
+ * </app-accordion-item>
+ * ```
  */
 @Component({
   selector: 'app-accordion-item',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <details class="accordion" [open]="defaultOpen" [id]="'accordion-' + itemId">
-      <summary class="accordion__head" [attr.aria-controls]="'accordion-body-' + itemId">
+    <details
+      class="accordion"
+      [open]="defaultOpen"
+      [id]="'accordion-' + itemId"
+    >
+      <!--
+        <summary> is the interactive affordance. Screen readers announce the
+        accessible name (title text) and the expanded/collapsed state automatically
+        via the native disclosure role — no aria-expanded needed.
+      -->
+      <summary
+        class="accordion__head"
+        [attr.aria-controls]="'accordion-body-' + itemId"
+      >
         <span class="accordion__label">{{ title }}</span>
         <span class="accordion__icon" aria-hidden="true">
-          <!-- ChevronUp/Down — CSS rotate en función del estado open -->
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-            <path d="M2.5 5L7 9.5L11.5 5" stroke="#354159" stroke-width="1.5"
-                  stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              d="M2.5 5L7 9.5L11.5 5"
+              stroke="#354159"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         </span>
       </summary>
+
       <div class="accordion__body" [id]="'accordion-body-' + itemId">
         <ng-content />
       </div>
@@ -39,7 +78,6 @@ import {
       border-bottom: 1px solid #F0F2F6;
       background: #ffffff;
 
-      /* Anima la apertura del body en browsers con soporte */
       &[open] .accordion__icon svg {
         transform: rotate(180deg);
       }
@@ -53,11 +91,17 @@ import {
       gap: 8px;
       height: 56px;
       cursor: pointer;
-      list-style: none; /* elimina el marker nativo de <summary> */
+      /* Remove native <summary> marker across all browsers */
+      list-style: none;
       user-select: none;
 
-      /* Elimina el marker de Safari */
       &::-webkit-details-marker { display: none; }
+
+      /* WCAG 2.4.7: keyboard focus ring */
+      &:focus-visible {
+        outline: 2px solid #1A8FF1;
+        outline-offset: -2px;
+      }
 
       &:hover .accordion__label {
         color: #1A8FF1;
@@ -101,7 +145,20 @@ import {
   `],
 })
 export class AccordionItemComponent {
+  /**
+   * Unique identifier used to construct the `id` attributes of both the
+   * `<details>` element and its body `<div>`.
+   * Must be unique within the page to ensure correct `aria-controls` linkage.
+   */
   @Input({ required: true }) itemId!: string;
+
+  /** Text label rendered inside `<summary>` as the accordion trigger. */
   @Input({ required: true }) title!: string;
+
+  /**
+   * Whether the accordion is expanded on initial render.
+   * Serialised to the native `open` attribute in SSR-generated HTML.
+   * Defaults to `false` (collapsed).
+   */
   @Input() defaultOpen = false;
 }

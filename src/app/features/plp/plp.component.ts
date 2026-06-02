@@ -197,7 +197,7 @@ export class PlpComponent implements OnInit {
 
       // Analytics: view_item_list
       this.analytics.trackViewItemList(
-        products.map((p) => ({ id: p.id, name: p.name, price: p.variants[0]?.price ?? 0 }))
+        products.map((p) => ({ item_id: p.id, item_name: p.name, price: p.variants[0]?.price ?? 0 }))
       );
     });
   }

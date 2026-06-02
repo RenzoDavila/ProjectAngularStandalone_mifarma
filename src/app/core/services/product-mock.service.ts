@@ -121,7 +121,7 @@ const SEMANTIC_MAP: Record<string, string[]> = {
 };
 
 // ─────────────────────────────────────────────
-// MOCK DATA
+// MOCK DATA CON IMÁGENES WEB AGREGADAS
 // ─────────────────────────────────────────────
 const MOCK_PRODUCTS: Product[] = [
   {
@@ -129,8 +129,10 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Pharamol Antigripal 500 mg + 5 mg + 2 mg Tableta Recubierta',
     brand: 'INAMED PHARMA',
     description: 'Medicamento con paracetamol para aliviar dolor leve y reducir fiebre, fenilamina como descongestionante nasal y clorfenamina como antihistamínico.',
-    imageUrl: 'assets/images/pharamol-antigripal.svg',
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Pharamol\nAntigripal',
     images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Pharamol\nAntigripal',
+      'https://placehold.co/400x400/10b981/ffffff?text=Caja\nx100',
       'assets/images/pharamol-antigripal.svg',
       'assets/images/pharamol-antigripal-2.svg',
       'assets/images/pharamol-antigripal-3.svg'
@@ -149,8 +151,11 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Ibuprofeno 400mg',
     brand: 'Genoma',
     description: 'Antiinflamatorio no esteroideo (AINE). Eficaz para dolor, fiebre e inflamación. Indicado en cefalea, dolor muscular, articular y odontálgico.',
-    imageUrl: 'assets/images/ibuprofeno.svg',
-    images: ['assets/images/ibuprofeno.svg'],
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Ibuprofeno\n400mg',
+    images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Ibuprofeno\n400mg',
+      'assets/images/ibuprofeno.svg'
+    ],
     category: 'Analgésicos',
     tags: ['analgesico', 'antiinflamatorio', 'dolor', 'fiebre', 'antipiretico', 'cefalea', 'dolor muscular', 'salud bucal'],
     variants: [
@@ -165,8 +170,11 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Loratadina 10mg',
     brand: 'Labfarma',
     description: 'Antihistamínico de segunda generación. Sin efecto sedante. Indicado para rinitis alérgica, urticaria y otras alergias cutáneas.',
-    imageUrl: 'assets/images/loratadina.svg',
-    images: ['assets/images/loratadina.svg'],
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Loratadina\n10mg',
+    images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Loratadina\n10mg',
+      'assets/images/loratadina.svg'
+    ],
     category: 'Antihistamínicos',
     tags: ['antihistaminico', 'alergia', 'rinitis', 'urticaria'],
     variants: [
@@ -180,8 +188,11 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Omeprazol 20mg',
     brand: 'Farmindustria',
     description: 'Inhibidor de la bomba de protones. Reduce la producción de ácido gástrico. Indicado en gastritis, úlcera péptica y reflujo gastroesofágico.',
-    imageUrl: 'assets/images/omeprazol.svg',
-    images: ['assets/images/omeprazol.svg'],
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Omeprazol\n20mg',
+    images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Omeprazol\n20mg',
+      'assets/images/omeprazol.svg'
+    ],
     category: 'Gastrointestinales',
     tags: ['antiacido', 'digestivo', 'gastritis', 'estomago', 'reflujo', 'ulcera', 'protector gastrico', 'salud digestiva'],
     variants: [
@@ -195,8 +206,11 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Metamizol 500mg (Dipirona)',
     brand: 'Teva',
     description: 'Analgésico y antipirético potente. Indicado para dolores intensos que no responden a otros analgésicos, y fiebre alta refractaria.',
-    imageUrl: 'assets/images/metamizol.svg',
-    images: ['assets/images/metamizol.svg'],
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Metamizol\n500mg',
+    images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Metamizol\n500mg',
+      'assets/images/metamizol.svg'
+    ],
     category: 'Analgésicos',
     tags: ['analgesico', 'antipiretico', 'dolor', 'fiebre', 'dolor muscular'],
     variants: [
@@ -209,8 +223,11 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Ketorolaco Trometamina 10mg',
     brand: 'Teva',
     description: 'Analgésico potente a corto plazo. Ideal para dolor de muela severo o dolor postoperatorio.',
-    imageUrl: 'assets/images/ketorolaco.svg',
-    images: ['assets/images/ketorolaco.svg'],
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Ketorolaco\n10mg',
+    images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Ketorolaco\n10mg',
+      'assets/images/ketorolaco.svg'
+    ],
     category: 'Analgésicos',
     tags: ['analgesico', 'antiinflamatorio', 'dolor', 'salud bucal'],
     variants: [
@@ -223,8 +240,11 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Buscapina Compuesta (Hioscina + Ibuprofeno)',
     brand: 'Sanofi',
     description: 'Antiespasmódico y analgésico. Tratamiento de los dolores espasmódicos y cólicos menstruales.',
-    imageUrl: 'assets/images/buscapina.svg',
-    images: ['assets/images/buscapina.svg'],
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Buscapina\nCompuesta',
+    images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Buscapina\nCompuesta',
+      'assets/images/buscapina.svg'
+    ],
     category: 'Salud Femenina',
     tags: ['antiespasmodico', 'analgesico', 'salud femenina', 'dolor'],
     variants: [
@@ -237,8 +257,11 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Simeticona 80mg',
     brand: 'Gaseovet',
     description: 'Alivia rápidamente los síntomas de la retención de gases (flatulencia, hinchazón, presión).',
-    imageUrl: 'assets/images/simeticona.svg',
-    images: ['assets/images/simeticona.svg'],
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Simeticona\n80mg',
+    images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Simeticona\n80mg',
+      'assets/images/simeticona.svg'
+    ],
     category: 'Gastrointestinales',
     tags: ['antiflatulento', 'digestivo', 'salud digestiva'],
     variants: [
@@ -251,8 +274,11 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Bisacodilo 5mg',
     brand: 'Dulcolax',
     description: 'Laxante estimulante de acción local. Proporciona alivio predecible del estreñimiento ocasional.',
-    imageUrl: 'assets/images/bisacodilo.svg',
-    images: ['assets/images/bisacodilo.svg'],
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Bisacodilo\n5mg',
+    images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Bisacodilo\n5mg',
+      'assets/images/bisacodilo.svg'
+    ],
     category: 'Gastrointestinales',
     tags: ['laxante', 'salud digestiva'],
     variants: [
@@ -265,8 +291,11 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Oximetazolina Clorhidrato 0.05%',
     brand: 'Afrin',
     description: 'Descongestionante nasal en spray. Actúa en minutos y dura hasta 12 horas.',
-    imageUrl: 'assets/images/oximetazolina.svg',
-    images: ['assets/images/oximetazolina.svg'],
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Oximetazolina',
+    images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Oximetazolina',
+      'assets/images/oximetazolina.svg'
+    ],
     category: 'Respiratorio',
     tags: ['descongestionante', 'antigripal', 'resfrio'],
     variants: [
@@ -279,8 +308,11 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Ambroxol Jarabe 30mg/5ml',
     brand: 'Mucosolvan',
     description: 'Mucolítico y expectorante. Facilita la eliminación de flemas y alivia la tos productiva.',
-    imageUrl: 'assets/images/ambroxol.svg',
-    images: ['assets/images/ambroxol.svg'],
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Ambroxol\nJarabe',
+    images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Ambroxol\nJarabe',
+      'assets/images/ambroxol.svg'
+    ],
     category: 'Respiratorio',
     tags: ['mucolitico', 'expectorante', 'tos', 'resfrio'],
     variants: [
@@ -293,8 +325,11 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Crema de Hidrocortisona 1%',
     brand: 'Cortizone',
     description: 'Crema antipruriginosa tópica. Alivia picazón intensa por picaduras, eczemas y reacciones alérgicas.',
-    imageUrl: 'assets/images/hidrocortisona.svg',
-    images: ['assets/images/hidrocortisona.svg'],
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Crema+de\nHidrocortisona',
+    images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Crema+de\nHidrocortisona',
+      'assets/images/hidrocortisona.svg'
+    ],
     category: 'Dermatología',
     tags: ['antihistaminico topico', 'crema', 'alergia', 'dermatologia'],
     variants: [
@@ -307,8 +342,11 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Lágrimas Artificiales (Hialuronato de Sodio 0.4%)',
     brand: 'Hyabak',
     description: 'Solución lubricante para ojos secos, cansados o irritados.',
-    imageUrl: 'assets/images/lagrimas.svg',
-    images: ['assets/images/lagrimas.svg'],
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Lagrimas\nArtificiales',
+    images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Lagrimas\nArtificiales',
+      'assets/images/lagrimas.svg'
+    ],
     category: 'Cuidado Ocular',
     tags: ['lagrimas artificiales', 'lubricante ocular', 'irritacion'],
     variants: [
@@ -321,8 +359,11 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Melatonina 5mg + Magnesio',
     brand: 'Nature Made',
     description: 'Suplemento natural para ayudar a regular el ciclo del sueño. Induce relajación y descanso profundo.',
-    imageUrl: 'assets/images/melatonina.svg',
-    images: ['assets/images/melatonina.svg'],
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Melatonina\n5mg',
+    images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Melatonina\n5mg',
+      'assets/images/melatonina.svg'
+    ],
     category: 'Bienestar',
     tags: ['inductor del sueño', 'relajante', 'melatonina', 'insomnio', 'magnesio', 'suplemento'],
     variants: [
@@ -335,8 +376,11 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Crema Antipañalitis con Óxido de Zinc 40%',
     brand: 'Desitin',
     description: 'Máxima protección para rozaduras severas en bebés. Forma una barrera protectora al instante.',
-    imageUrl: 'assets/images/desitin.svg',
-    images: ['assets/images/desitin.svg'],
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Crema\nAntipañalitis',
+    images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Crema\nAntipañalitis',
+      'assets/images/desitin.svg'
+    ],
     category: 'Cuidado Infantil',
     tags: ['crema antipañalitis', 'cuidado infantil', 'dermatologia', 'oxido de zinc'],
     variants: [
@@ -349,8 +393,11 @@ const MOCK_PRODUCTS: Product[] = [
     name: 'Fenazopiridina 100mg',
     brand: 'Pyridium',
     description: 'Analgésico del tracto urinario. Alivia el ardor, dolor y urgencia por infecciones urinarias.',
-    imageUrl: 'assets/images/fenazopiridina.svg',
-    images: ['assets/images/fenazopiridina.svg'],
+    imageUrl: 'https://placehold.co/400x400/10b981/ffffff?text=Fenazopiridina',
+    images: [
+      'https://placehold.co/400x400/10b981/ffffff?text=Fenazopiridina',
+      'assets/images/fenazopiridina.svg'
+    ],
     category: 'Salud Íntima',
     tags: ['analgesico urinario', 'salud intima'],
     variants: [
