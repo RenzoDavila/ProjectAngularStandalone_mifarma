@@ -1,12 +1,13 @@
 import { Component, inject, ChangeDetectionStrategy, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CartService } from './core/services/cart.service';
+import { CartModalComponent } from './shared/components/cart-modal/cart-modal.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CartModalComponent],
   template: `
     <!-- ══════════════════════════════════════════════════════════════════
          HEADER GLOBAL — Fiel al diseño Inkafarma del Figma
@@ -16,7 +17,7 @@ import { CartService } from './core/services/cart.service';
       <!-- 1. Cintillo promocional (TopBarCintillo) -->
       <div class="site-header__cintillo">
         <span class="site-header__cintillo-text">
-          Es un hecho establecido hace demasiado tiempo que un lector.
+          Más salud a mejor precio
         </span>
       </div>
 
@@ -26,15 +27,13 @@ import { CartService } from './core/services/cart.service';
 
           <!-- Logo Inkafarma -->
           <a routerLink="/productos" class="site-header__logo" aria-label="Inkafarma — Ir al inicio">
-            <!-- Ícono circular verde + texto "inkafarma" en verde -->
-            <span class="site-header__logo-mark" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <circle cx="11" cy="11" r="11" fill="#1B8F43"/>
-                <path d="M7 11.5L9.5 14L15 8.5" stroke="#FFF200" stroke-width="1.8"
-                      stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-            <span class="site-header__logo-text">inkafarma</span>
+            <img
+              src="assets/logos/logo-nombre-inkafarma.png"
+              alt="Inkafarma Logo"
+              class="site-header__logo-img"
+              width="184"
+              height="48"
+            />
           </a>
 
           <!-- Buscador (FormSearchNavbar) -->
@@ -61,10 +60,11 @@ import { CartService } from './core/services/cart.service';
 
           <!-- Acciones del header: Carrito -->
           <nav class="site-header__actions" aria-label="Acciones del usuario">
-            <a
-              routerLink="/productos"
+            <button
+              (click)="openCartModal()"
               class="site-header__cart-btn"
               [attr.aria-label]="'Carrito — ' + cartService.totalItems() + ' artículos'"
+              type="button"
             >
               <!-- Ícono carrito (Shared/HeaderButtonCart) -->
               <span class="site-header__cart-icon" aria-hidden="true">
@@ -78,7 +78,7 @@ import { CartService } from './core/services/cart.service';
               <span class="site-header__cart-count" aria-hidden="true">
                 {{ cartService.totalItems() }}
               </span>
-            </a>
+            </button>
           </nav>
 
         </div><!-- /container -->
@@ -112,6 +112,18 @@ import { CartService } from './core/services/cart.service';
     <footer class="site-footer" role="contentinfo">
       <div class="site-footer__container">
 
+        <!-- Logo Footer
+        <div class="site-footer__logo-section">
+          <img
+            src="assets/logos/logo-fondo-amarillo.png"
+            alt="Inkafarma Logo"
+            class="site-footer__logo"
+            width="100"
+            height="100"
+          />
+        </div>
+        -->
+
         <!-- Columnas de links -->
         <div class="site-footer__cols">
           @for (col of footerCols; track $index) {
@@ -143,39 +155,47 @@ import { CartService } from './core/services/cart.service';
             </div>
 
             <p class="site-footer__col-title" style="margin-top: 24px">Libro de reclamaciones</p>
-            <div class="site-footer__libro" aria-label="Libro de reclamaciones">
-              <svg width="48" height="52" viewBox="0 0 48 52" fill="none">
-                <rect x="4" y="4" width="40" height="44" rx="4" fill="none" stroke="#fff" stroke-width="2"/>
-                <rect x="12" y="14" width="24" height="4" rx="2" fill="#fff" opacity="0.5"/>
-                <rect x="12" y="22" width="16" height="4" rx="2" fill="#fff" opacity="0.3"/>
-              </svg>
-            </div>
+            <a href="#" class="site-footer__libro" aria-label="Libro de reclamaciones">
+              <img
+                src="assets/ui/libro-de-reclamaciones.jpg"
+                alt="Libro de reclamaciones"
+                class="site-footer__libro-img"
+                width="64"
+                height="72"
+              />
+            </a>
 
             <p class="site-footer__col-title" style="margin-top: 24px">Descarga nuestra app en</p>
             <div class="site-footer__apps">
               <a href="#" class="site-footer__app-btn" aria-label="Google Play">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="#fff" aria-hidden="true">
-                  <path d="M2 1.5l12 6.5-12 6.5V1.5z"/>
-                </svg>
-                Google Play
+                <img
+                  src="assets/ui/ikafarma-google_play.png"
+                  alt="Google Play"
+                  class="site-footer__app-img"
+                />
               </a>
               <a href="#" class="site-footer__app-btn" aria-label="App Store">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="#fff" aria-hidden="true">
-                  <path d="M12.5 8c0-2.5-2-4.5-4.5-4.5S3.5 5.5 3.5 8s2 4.5 4.5 4.5S12.5 10.5 12.5 8z"/>
-                </svg>
-                App Store
+                <img
+                  src="assets/ui/ikafarma-app_store.png"
+                  alt="App Store"
+                  class="site-footer__app-img"
+                />
               </a>
             </div>
           </div>
         </div>
+      </div>
 
         <!-- Copyright -->
         <div class="site-footer__bottom">
           <p>Copyright © Inkafarma 2026 Todos los derechos reservados</p>
         </div>
-
-      </div>
     </footer>
+
+    <!-- Cart Modal -->
+    @if (isCartModalOpen()) {
+      <app-cart-modal (closeRequest)="closeCartModal()"></app-cart-modal>
+    }
   `,
   styles: [`
     /* ════════════════════════════════════════════════════════════════════
@@ -239,6 +259,11 @@ import { CartService } from './core/services/cart.service';
       text-decoration: none;
       flex-shrink: 0;
       width: 184px;
+    }
+
+    .site-header__logo-img {
+      height: auto;
+      object-fit: contain;
     }
 
     .site-header__logo-mark {
@@ -322,8 +347,11 @@ import { CartService } from './core/services/cart.service';
       height: 40px;
       background: #EAF7FE;
       border-radius: 10px;
+      border: none;
       text-decoration: none;
+      cursor: pointer;
       transition: background 150ms ease;
+      font-family: inherit;
 
       &:hover { background: #d4effd; }
     }
@@ -376,14 +404,15 @@ import { CartService } from './core/services/cart.service';
       white-space: nowrap;
       flex-shrink: 0;
       border-bottom: 2px solid transparent;
-      transition: color 150ms ease, border-color 150ms ease;
+      transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
 
       &:hover { color: #1B8F43; }
 
       &--active {
-        color: #1B8F43;
+        color: #ffffff;
         font-weight: 600;
-        border-bottom-color: #1B8F43;
+        background: #1B8F43;
+        border-bottom-color: transparent;
       }
     }
 
@@ -391,8 +420,8 @@ import { CartService } from './core/services/cart.service';
        FOOTER STYLES
     ════════════════════════════════════════════════════════════════════ */
     .site-footer {
-      background: #243455;
-      color: rgba(255,255,255,0.8);
+      background: #FFF;
+      color: #354159;
       padding: 40px 0 0;
       margin-top: 0;
     }
@@ -401,6 +430,20 @@ import { CartService } from './core/services/cart.service';
       max-width: 1366px;
       margin-inline: auto;
       padding-inline: 24px;
+    }
+
+    .site-footer__logo-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 0 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .site-footer__logo {
+      height: auto;
+      object-fit: contain;
+      max-width: 120px;
     }
 
     .site-footer__cols {
@@ -423,7 +466,7 @@ import { CartService } from './core/services/cart.service';
       font-weight: 600;
       font-size: 13px;
       line-height: 20px;
-      color: #ffffff;
+      color: #354159;
       margin: 0 0 12px;
       letter-spacing: 0.1px;
     }
@@ -433,13 +476,13 @@ import { CartService } from './core/services/cart.service';
       font-weight: 400;
       font-size: 13px;
       line-height: 20px;
-      color: rgba(255,255,255,0.65);
+      color: #354159;
       margin: 0 0 8px;
       letter-spacing: 0.1px;
       cursor: pointer;
       transition: color 150ms ease;
 
-      &:hover { color: #ffffff; }
+      &:hover { color: #44516d; }
     }
 
     .site-footer__social {
@@ -454,65 +497,95 @@ import { CartService } from './core/services/cart.service';
       justify-content: center;
       width: 36px;
       height: 36px;
-      border-radius: 50%;
+      border-radius: 25%;
+      background: #17a15b;
       border: 1px solid rgba(255,255,255,0.2);
       transition: border-color 150ms ease, background 150ms ease;
 
-      &:hover { background: rgba(255,255,255,0.1); }
+      &:hover { background: rgba(255,255,255,0.1); border-color: #17a15b; background: #138f50; }
     }
 
     .site-footer__libro {
-      opacity: 0.6;
+      display: inline-block;
       margin-top: 8px;
+      text-decoration: none;
+      border-radius: 25%;
+      overflow: hidden;
+      transition: transform 150ms ease, filter 150ms ease;
+
+      &:hover {
+        transform: scale(1.05);
+        filter: brightness(1.1);
+      }
+    }
+
+    .site-footer__libro-img {
+      display: block;
+      width: 64px;
+      height: auto;
+      border-radius: 25%;
+      object-fit: cover;
     }
 
     .site-footer__apps {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 8px;
+      margin-top: 12px;
     }
 
     .site-footer__app-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      border: 1px solid rgba(255,255,255,0.3);
+      display: inline-block;
+      max-width: 50%;
+      border: none;
       border-radius: 8px;
-      color: #ffffff;
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
       text-decoration: none;
-      width: fit-content;
-      transition: background 150ms ease;
+      transition: transform 150ms ease, filter 150ms ease;
+      cursor: pointer;
 
-      &:hover { background: rgba(255,255,255,0.1); }
+      &:hover {
+        transform: scale(1.05);
+        filter: brightness(1.1);
+      }
+    }
+
+    .site-footer__app-img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: 200px;
+      object-fit: contain;
     }
 
     .site-footer__bottom {
       border-top: 1px solid rgba(255,255,255,0.1);
+      background: #f8f8f8;
       padding: 20px 0;
       text-align: center;
       font-family: 'Inter', sans-serif;
       font-size: 12px;
-      color: rgba(255,255,255,0.5);
+      color: #354159;
     }
   `],
 })
 export class App {
   readonly cartService = inject(CartService);
+  readonly isCartModalOpen = signal(false);
+
+  openCartModal(): void {
+    this.isCartModalOpen.set(true);
+  }
+
+  closeCartModal(): void {
+    this.isCartModalOpen.set(false);
+  }
 
   readonly navCategories = [
-    { label: 'Dermocosmetica', route: '/productos' },
+    { label: 'Dermocosmetica', route: '/dermocosmetica' },
     { label: 'Farmacia',       route: '/productos' },
-    { label: 'Bienestar',      route: '/productos' },
-    { label: 'Infantil',       route: '/productos' },
-    { label: 'Fotoprotección', route: '/productos' },
-    { label: 'Inkaclub',       route: '/productos' },
-    { label: 'Tienda 24 hrs.', route: '/productos' },
-    { label: 'Catálogos',      route: '/productos' },
+    { label: 'Bienestar',      route: '/bienestar' },
+    { label: 'Infantil',       route: '/infantil' },
+    { label: 'Fotoprotección', route: '/fotoproteccion' },
+    { label: 'Inkaclub',       route: '/inkaclub' },
+    { label: 'Tienda 24 hrs.', route: '/tienda24hrs' },
+    { label: 'Catálogos',      route: '/catalogos' },
   ];
 
   readonly footerCols = [
