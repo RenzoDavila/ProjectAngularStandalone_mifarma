@@ -64,7 +64,7 @@ import { CartService, CartItem } from '../../../core/services/cart.service';
             <a
               routerLink="/compra-exitosa"
               class="cart-modal__btn cart-modal__btn--primary"
-              (click)="closeModal()"
+              (click)="onCheckout()"
             >
               Comprar
             </a>
@@ -344,5 +344,10 @@ export class CartModalComponent {
 
   closeModal(): void {
     this.closeRequest.emit();
+  }
+
+  onCheckout(): void {
+    this.cartService.clearCart();
+    this.closeModal();
   }
 }

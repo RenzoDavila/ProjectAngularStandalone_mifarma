@@ -738,6 +738,12 @@ $radius-card:  16px;
   margin-bottom: 20px;
 }
 
+.pdp__cross-selling-title-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .pdp__cross-selling-title {
   font-family: 'Inter', sans-serif;
   font-weight: 600;
@@ -795,9 +801,6 @@ $radius-card:  16px;
 
 // ─── Nav Arrows del carrusel ──────────────────────────────────────────────────
 .pdp__carousel-nav {
-  position: absolute;
-  top: 0;
-  right: 0;
   display: flex;
   gap: 8px;
 }
@@ -805,19 +808,29 @@ $radius-card:  16px;
 .pdp__carousel-arrow {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 1px solid $border-light;
+  border-radius: 6px;
+  background: #F1F5F9;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 150ms ease, box-shadow 150ms ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: all 200ms ease;
+  color: $navy;
 
-  &:hover {
-    background: #f4f7fd;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  &:hover:not(:disabled) {
+    background: $green;
+    color: white;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #E2E8F0;
   }
 }
 

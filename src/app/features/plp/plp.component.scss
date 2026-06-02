@@ -151,10 +151,10 @@
   }
 
   &--active {
-    background: var(--color-brand-primary);
-    border-color: var(--color-brand-primary);
-    color: white;
-    font-weight: base.$font-weight-semibold;
+    background: var(--color-brand-primary) !important;
+    border-color: var(--color-brand-primary) !important;
+    color: white !important;
+    font-weight: base.$font-weight-semibold !important;
   }
 }
 

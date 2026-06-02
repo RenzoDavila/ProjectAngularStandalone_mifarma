@@ -100,64 +100,74 @@ import { AnalyticsService } from '../../../core/services/analytics.service';
           </a>
         </h3>
 
-        <!--
-          Rating: role='img' on a <p> lets screen readers announce the
-          accessible label as a single unit rather than reading each star.
-          Individual stars are aria-hidden to avoid noise.
-        -->
-        <p
-          class="product-card__rating"
-          role="img"
-          [attr.aria-label]="product.rating + ' de 5 estrellas, ' + product.reviewCount + ' reseñas'"
-        >
-          @for (star of starValues; track star) {
-            <span
-              class="product-card__star"
-              [class.product-card__star--filled]="star <= product.rating"
-              aria-hidden="true"
-            >★</span>
-          }
-          <span class="product-card__review-count" aria-hidden="true">
-            ({{ product.reviewCount }})
-          </span>
-        </p>
+        <div class="product-card__interest">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> 
+          <span>Te puede interesar</span>
+        </div>
 
-        <!-- Pricing -->
-        <div class="product-card__price-wrapper">
-          @if (currentVariant.originalPrice) {
-            <s class="product-card__price-old" aria-label="Precio anterior">
-              PEN {{ currentVariant.originalPrice | number:'1.2-2' }}
-            </s>
-          }
-          <p class="product-card__price" aria-label="Precio actual">
-            PEN {{ currentVariant.price | number:'1.2-2' }}
-          </p>
+        <div class="product-card__vendor">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3"/></svg> 
+          <span>Inkafarma</span>
+        </div>
+
+        <!-- Pricing as per Figma image -->
+        <div class="product-card__prices-layout">
+          <!-- Fila 1: Precio Regular -->
+          <div class="product-card__price-row">
+            <span class="product-card__price-label" [style.text-decoration]="currentVariant.originalPrice ? 'line-through' : 'none'">
+              S/ {{ (currentVariant.originalPrice || currentVariant.price) | number:'1.2-2' }}
+            </span>
+          </div>
+
+          <!-- Fila 2: Precio Promocional -->
+          <div class="product-card__price-row">
+            <span class="product-card__price-label" style="font-weight: 700; color: #1e293b;">
+              S/ {{ currentVariant.price | number:'1.2-2' }}
+            </span>
+            <div class="product-card__price-right">
+              @if (discountPercent > 0) {
+                <span class="pc-price-tag pc-price-tag--dark">-{{ discountPercent }}%</span>
+              }
+            </div>
+          </div>
+
+          <!-- Fila 3: Precio Tarjeta -->
+          <div class="product-card__price-row">
+            <span class="product-card__price-label" style="font-weight: 700; color: #1e293b;">
+              S/ {{ (currentVariant.price * 0.95) | number:'1.2-2' }}
+            </span>
+            <div class="product-card__price-right">
+              <span class="product-card__card-icons">
+                <span class="product-card__card-icon product-card__card-icon--black">
+                  <svg viewBox="0 0 60 30" fill="none" width="24" height="12"><rect width="60" height="30" rx="8" fill="#000000"/><text x="10" y="22" font-family="Arial" font-weight="900" font-size="21" fill="#ffffff" letter-spacing="-0.5">síp</text><circle cx="47" cy="10" r="4.5" fill="#00B1FF"/></svg>
+                </span>
+                <span class="product-card__card-icon product-card__card-icon--blue">
+                  <svg viewBox="0 0 60 30" fill="none" width="24" height="12"><rect width="60" height="30" rx="8" fill="#00B1FF"/><text x="10" y="22" font-family="Arial" font-weight="900" font-size="21" fill="#ffffff" letter-spacing="-0.5">sp</text><circle cx="47" cy="10" r="4.5" fill="#000000"/></svg>
+                </span>
+              </span>
+              <span class="pc-price-tag pc-price-tag--blue">-{{ discountPercent > 0 ? discountPercent + 5 : 5 }}%</span>
+            </div>
+          </div>
         </div>
 
         <!-- CTA -->
-        <button
-          class="product-card__cta btn btn--primary"
-          [id]="ctaId"
-          (click)="onAddToCart()"
-          [attr.aria-label]="'Agregar ' + product.name + ' al carrito'"
-          type="button"
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
-            focusable="false"
+        <div class="product-card__cta-group">
+          <button
+            class="product-card__cta btn btn--primary"
+            [id]="ctaId"
+            (click)="onAddToCart()"
+            [attr.aria-label]="'Agregar ' + product.name + ' al carrito'"
+            type="button"
           >
-            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <path d="M16 10a4 4 0 01-8 0"/>
-          </svg>
-          Agregar
-        </button>
+            Agregar al carrito
+          </button>
+          
+          <button class="product-card__btn-fav" aria-label="Agregar a favoritos" type="button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+            </svg>
+          </button>
+        </div>
       </div>
     </article>
   `,
@@ -169,8 +179,8 @@ import { AnalyticsService } from '../../../core/services/analytics.service';
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      height: 420px;
-      max-height: 420px;
+      height: 460px;
+      max-height: 460px;
       transition:
         box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1),
         transform   250ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -188,7 +198,7 @@ import { AnalyticsService } from '../../../core/services/analytics.service';
 
     .product-card__image-wrapper {
       position: relative;
-      height: 180px;
+      height: 150px;
       flex-shrink: 0;
       background: hsl(210, 16%, 96%);
       overflow: hidden;
@@ -232,7 +242,7 @@ import { AnalyticsService } from '../../../core/services/analytics.service';
     }
 
     .product-card__body {
-      padding: var(--spacing-card-padding);
+      padding: 1rem 1rem 1.25rem 1rem;
       display: flex;
       flex-direction: column;
       flex: 1;
@@ -268,70 +278,129 @@ import { AnalyticsService } from '../../../core/services/analytics.service';
       a:hover { color: var(--color-brand-primary); }
     }
 
-    /* Resets <p> default margin; role="img" semantics via attr */
-    .product-card__rating {
+    .product-card__interest {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #E8F4FF;
+      color: #1A8FF1;
+      padding: 4px 8px;
+      border-radius: 9999px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      width: fit-content;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-card__vendor {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #64748B;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .product-card__prices-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 1rem;
+      margin-top: auto;
+    }
+
+    .product-card__price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .product-card__price-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #64748B;
+    }
+
+    .product-card__price-right {
       display: flex;
       align-items: center;
-      gap: 1px;
-      margin: 0 0 0.25rem;
+      gap: 6px;
     }
 
-    .product-card__star {
-      color: var(--color-border);
-      font-size: 0.8rem;
-
-      &--filled { color: hsl(45, 96%, 48%); }
+    .product-card__card-icons {
+      display: flex;
+      gap: 2px;
     }
 
-    .product-card__review-count {
-      font-size: 0.7rem;
-      color: var(--color-text-secondary);
-      margin-left: 0.25rem;
+    .product-card__card-icon {
+      border-radius: 2px;
+      overflow: hidden;
+      display: flex;
     }
 
-    .product-card__price-wrapper {
-      margin-top: auto;
-      margin-bottom: 0.75rem;
-    }
-
-    .product-card__price-old {
-      font-size: 0.75rem;
-      color: var(--color-text-price-old);
-      display: block;
-    }
-
-    .product-card__price {
-      font-size: 1.125rem;
+    .pc-price-tag {
+      font-size: 0.65rem;
       font-weight: 700;
-      color: var(--color-text-price);
+      padding: 2px 4px;
+      border-radius: 4px;
+      color: white;
     }
 
-    .product-card__cta {
-      width: 100%;
+    .pc-price-tag--dark {
+      background: #354159;
+    }
+
+    .pc-price-tag--blue {
+      background: #00B1FF;
+    }
+
+    .product-card__cta-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .product-card__btn-fav {
+      width: 44px;
+      height: 44px;
+      border-radius: 200px;
+      background: #EDF8F2;
+      color: #17A15B;
+      border: none;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      padding: 0.6rem 1rem;
-      background: var(--color-brand-accent);
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 150ms ease, background 150ms ease;
+
+      &:hover {
+        background: #DDF1E6;
+      }
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+
+    .product-card__cta {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1rem;
+      background: #17A15B;
       color: white;
-      border-radius: var(--radius-button);
+      border-radius: 200px;
       font-size: 0.875rem;
       font-weight: 600;
       transition: background 200ms ease, transform 150ms ease;
 
       &:hover {
-        background: var(--color-brand-accent-hover);
+        background: #138C4F;
         transform: scale(1.02);
       }
 
       &:active { transform: scale(0.98); }
-
-      /* Explicit focus-visible ring for keyboard users (WCAG 2.4.7) */
-      &:focus-visible {
-        outline: 2px solid var(--color-brand-accent);
-        outline-offset: 2px;
-      }
     }
   `],
 })

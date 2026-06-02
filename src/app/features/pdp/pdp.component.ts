@@ -6,6 +6,8 @@ import {
   OnInit,
   inject,
   ChangeDetectionStrategy,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -352,16 +354,42 @@ import { AccordionItemComponent } from '../../shared/components/accordion-item/a
           <section class="container pdp__cross-selling" aria-labelledby="cross-selling-title">
 
             <div class="pdp__cross-selling-header">
-              <h2 id="cross-selling-title" class="pdp__cross-selling-title">
-                Lo más buscado
-              </h2>
-              <a routerLink="/productos" class="pdp__cross-selling-link">
-                Mostrar más
-              </a>
+              <div class="pdp__cross-selling-title-group">
+                <h2 id="cross-selling-title" class="pdp__cross-selling-title">
+                  Lo más buscado
+                </h2>
+                <a routerLink="/productos" class="pdp__cross-selling-link">
+                  Mostrar más
+                </a>
+              </div>
+
+              <!-- Nav arrows -->
+              <div class="pdp__carousel-nav" aria-hidden="true">
+                <button 
+                  class="pdp__carousel-arrow pdp__carousel-arrow--prev" 
+                  aria-label="Anterior"
+                  (click)="scrollCarousel(-1)"
+                  [disabled]="crossSelling().length <= 4">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <button 
+                  class="pdp__carousel-arrow pdp__carousel-arrow--next" 
+                  aria-label="Siguiente"
+                  (click)="scrollCarousel(1)"
+                  [disabled]="crossSelling().length <= 4">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.5"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
             </div>
 
             <!-- Carrusel horizontal con scroll snap -->
-            <div class="pdp__carousel" role="list" aria-label="Productos más buscados">
+            <div #carousel class="pdp__carousel" role="list" aria-label="Productos más buscados">
               @for (related of crossSelling(); track related.id) {
                 <div class="pdp__carousel-item" role="listitem">
                   <app-product-card
@@ -371,22 +399,6 @@ import { AccordionItemComponent } from '../../shared/components/accordion-item/a
                   />
                 </div>
               }
-            </div>
-
-            <!-- Nav arrows -->
-            <div class="pdp__carousel-nav" aria-hidden="true">
-              <button class="pdp__carousel-arrow pdp__carousel-arrow--prev" aria-label="Anterior">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M10 12L6 8L10 4" stroke="#354159" stroke-width="1.5"
-                        stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-              <button class="pdp__carousel-arrow pdp__carousel-arrow--next" aria-label="Siguiente">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M6 4L10 8L6 12" stroke="#354159" stroke-width="1.5"
-                        stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
             </div>
 
           </section>
@@ -448,6 +460,8 @@ export class PdpComponent implements OnInit {
   private titleService    = inject(Title);
   private metaService     = inject(Meta);
 
+  @ViewChild('carousel') carouselRef?: ElementRef<HTMLElement>;
+
   // ─── Signals de estado ─────────────────────────────────────────────
   readonly product        = signal<Product | null>(null);
   readonly crossSelling   = signal<Product[]>([]);
@@ -492,11 +506,10 @@ export class PdpComponent implements OnInit {
       this.analytics.trackViewItem(product.id, product.name, price);
 
       // ── Cross-selling ─────────────────────────────────────────────────
-      if (product.crossSelling?.length) {
-        this.productService.getCrossSelling(product.crossSelling).subscribe((related) => {
-          this.crossSelling.set(related);
-        });
-      }
+      const crossIds = product.crossSelling || [];
+      this.productService.getCrossSelling(crossIds, product.id).subscribe((related) => {
+        this.crossSelling.set(related);
+      });
     });
   }
 
@@ -523,5 +536,12 @@ export class PdpComponent implements OnInit {
   getDiscount(variant: ProductVariant | null): number {
     if (!variant?.originalPrice) return 0;
     return Math.round(((variant.originalPrice - variant.price) / variant.originalPrice) * 100);
+  }
+
+  scrollCarousel(direction: number): void {
+    if (!this.carouselRef) return;
+    const carousel = this.carouselRef.nativeElement;
+    const scrollAmount = carousel.clientWidth * 0.8;
+    carousel.scrollBy({ left: scrollAmount * direction, behavior: 'smooth' });
   }
 }
