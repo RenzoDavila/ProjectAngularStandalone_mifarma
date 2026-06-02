@@ -6,6 +6,7 @@ import {
   ChangeDetectionStrategy,
   inject,
   computed,
+  signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
@@ -154,12 +155,21 @@ import { AnalyticsService } from '../../../core/services/analytics.service';
         <div class="product-card__cta-group">
           <button
             class="product-card__cta btn btn--primary"
+            [class.product-card__cta--success]="isAdded()"
             [id]="ctaId"
             (click)="onAddToCart()"
             [attr.aria-label]="'Agregar ' + product.name + ' al carrito'"
             type="button"
+            [disabled]="isAdded()"
           >
-            Agregar al carrito
+            @if (isAdded()) {
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Agregado
+            } @else {
+              Agregar al carrito
+            }
           </button>
           
           <button class="product-card__btn-fav" aria-label="Agregar a favoritos" type="button">
@@ -395,12 +405,18 @@ import { AnalyticsService } from '../../../core/services/analytics.service';
       font-weight: 600;
       transition: background 200ms ease, transform 150ms ease;
 
-      &:hover {
+      &:hover:not(:disabled) {
         background: #138C4F;
         transform: scale(1.02);
       }
 
-      &:active { transform: scale(0.98); }
+      &:active:not(:disabled) { transform: scale(0.98); }
+    }
+
+    .product-card__cta--success {
+      background: #10B981 !important;
+      transform: scale(1.05);
+      pointer-events: none;
     }
   `],
 })
@@ -427,6 +443,9 @@ export class ProductCardComponent {
 
   /** Fixed star scale used to render the rating widget. */
   readonly starValues = [1, 2, 3, 4, 5] as const;
+  
+  /** Signal for the success animation state */
+  readonly isAdded = signal(false);
 
   /** Stable ID connecting the article's `aria-labelledby` to the `<h3>`. */
   get headingId(): string {
@@ -461,6 +480,8 @@ export class ProductCardComponent {
 
   /** Emits an `addToCart` output event and tracks the GA4 eCommerce action. */
   onAddToCart(): void {
+    if (this.isAdded()) return; // Previene doble click durante la animación
+    
     const variant = this.currentVariant;
     this.addToCart.emit({ product: this.product, variant });
     this._analytics.trackAddToCart(
@@ -470,6 +491,12 @@ export class ProductCardComponent {
       variant.price,
       1,
     );
+
+    // Activar animación
+    this.isAdded.set(true);
+    setTimeout(() => {
+      this.isAdded.set(false);
+    }, 1500);
   }
 
   /** Tracks a GA4 `view_item` event when the user navigates to the PDP. */

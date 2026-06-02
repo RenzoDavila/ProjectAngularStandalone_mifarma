@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, signal, effect, untracked } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CartService } from './core/services/cart.service';
 import { CartModalComponent } from './shared/components/cart-modal/cart-modal.component';
@@ -63,21 +63,26 @@ import { CartModalComponent } from './shared/components/cart-modal/cart-modal.co
             <button
               (click)="openCartModal()"
               class="site-header__cart-btn"
+              [class.site-header__cart-btn--animating]="cartAnimation()"
               [attr.aria-label]="'Carrito — ' + cartService.totalItems() + ' artículos'"
               type="button"
             >
-              <!-- Ícono carrito (Shared/HeaderButtonCart) -->
-              <span class="site-header__cart-icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M2.5 2.5H4.167L5.833 12.5h8.334l1.666-7.5H5" stroke="#1A8FF1"
-                        stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-                  <circle cx="7.5" cy="15" r="1" fill="#1A8FF1"/>
-                  <circle cx="13.5" cy="15" r="1" fill="#1A8FF1"/>
-                </svg>
-              </span>
-              <span class="site-header__cart-count" aria-hidden="true">
-                {{ cartService.totalItems() }}
-              </span>
+              @if (cartAnimation()) {
+                <span class="site-header__cart-plus">+1</span>
+              } @else {
+                <!-- Ícono carrito (Shared/HeaderButtonCart) -->
+                <span class="site-header__cart-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M2.5 2.5H4.167L5.833 12.5h8.334l1.666-7.5H5" stroke="#1A8FF1"
+                          stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="7.5" cy="15" r="1" fill="#1A8FF1"/>
+                    <circle cx="13.5" cy="15" r="1" fill="#1A8FF1"/>
+                  </svg>
+                </span>
+                <span class="site-header__cart-count" aria-hidden="true">
+                  {{ cartService.totalItems() }}
+                </span>
+              }
             </button>
           </nav>
 
@@ -350,10 +355,27 @@ import { CartModalComponent } from './shared/components/cart-modal/cart-modal.co
       border: none;
       text-decoration: none;
       cursor: pointer;
-      transition: background 150ms ease;
+      transition: transform 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275), background 300ms ease;
       font-family: inherit;
 
       &:hover { background: #d4effd; }
+    }
+
+    .site-header__cart-btn--animating {
+      transform: scale(1.15) rotate(5deg);
+      background: #d4effd;
+    }
+
+    .site-header__cart-plus {
+      font-weight: 800;
+      color: #1A8FF1;
+      font-size: 16px;
+      animation: popIn 300ms ease forwards;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     .site-header__cart-icon {
@@ -568,6 +590,25 @@ import { CartModalComponent } from './shared/components/cart-modal/cart-modal.co
 export class App {
   readonly cartService = inject(CartService);
   readonly isCartModalOpen = signal(false);
+  
+  cartAnimation = signal(false);
+  private initialCartLoad = true;
+
+  constructor() {
+    effect(() => {
+      const count = this.cartService.totalItems();
+      untracked(() => {
+        if (this.initialCartLoad) {
+          this.initialCartLoad = false;
+          return;
+        }
+        if (count > 0) {
+          this.cartAnimation.set(true);
+          setTimeout(() => this.cartAnimation.set(false), 800);
+        }
+      });
+    });
+  }
 
   openCartModal(): void {
     this.isCartModalOpen.set(true);

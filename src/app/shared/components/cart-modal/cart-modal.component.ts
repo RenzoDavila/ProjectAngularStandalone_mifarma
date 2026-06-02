@@ -38,10 +38,15 @@ import { CartService, CartItem } from '../../../core/services/cart.service';
                   <p class="cart-modal__item-variant">{{ item.variant.label }}</p>
                 </div>
                 <div class="cart-modal__item-price">
-                  <span class="cart-modal__item-quantity">x{{ item.quantity }}</span>
-                  <span class="cart-modal__item-total">
-                    S/. {{ (item.variant.price * item.quantity).toFixed(2) }}
+                  <span class="cart-modal__item-unit-price" aria-label="Precio unitario">
+                    S/. {{ item.variant.price.toFixed(2) }} c/u
                   </span>
+                  <div class="cart-modal__item-total-group">
+                    <span class="cart-modal__item-quantity">x{{ item.quantity }}</span>
+                    <span class="cart-modal__item-total">
+                      S/. {{ (item.variant.price * item.quantity).toFixed(2) }}
+                    </span>
+                  </div>
                 </div>
               </div>
             }
@@ -203,19 +208,32 @@ import { CartService, CartItem } from '../../../core/services/cart.service';
       flex-direction: column;
       align-items: flex-end;
       gap: 4px;
-      min-width: 80px;
+      min-width: 90px;
+    }
+
+    .cart-modal__item-unit-price {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: #7E8BA7;
+    }
+
+    .cart-modal__item-total-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .cart-modal__item-quantity {
       font-family: 'Inter', sans-serif;
-      font-size: 12px;
+      font-size: 13px;
       color: #7E8BA7;
+      font-weight: 500;
     }
 
     .cart-modal__item-total {
       font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
+      font-size: 15px;
+      font-weight: 700;
       color: #1B8F43;
     }
 

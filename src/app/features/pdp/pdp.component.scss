@@ -608,6 +608,12 @@ $radius-card:  16px;
     transform: scale(0.98);
   }
 
+  &--success {
+    background: #10B981 !important;
+    transform: scale(1.02);
+    pointer-events: none;
+  }
+
   &:disabled {
     background: #B2C8BC;
     cursor: not-allowed;

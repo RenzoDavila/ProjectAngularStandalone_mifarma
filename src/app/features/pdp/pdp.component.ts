@@ -249,13 +249,19 @@ import { AccordionItemComponent } from '../../shared/components/accordion-item/a
               <div class="pdp__cta-row">
                 <button
                   class="pdp__btn-cart"
+                  [class.pdp__btn-cart--success]="isAdded()"
                   id="pdp-add-to-cart"
                   (click)="addToCart()"
-                  [disabled]="cartStatus() === 'loading' || (selectedVariant()?.stock ?? 0) === 0"
+                  [disabled]="cartStatus() === 'loading' || (selectedVariant()?.stock ?? 0) === 0 || isAdded()"
                   [attr.aria-busy]="cartStatus() === 'loading'"
                   aria-label="Agregar al carrito"
                 >
-                  @if (cartStatus() === 'loading') {
+                  @if (isAdded()) {
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Agregado</span>
+                  } @else if (cartStatus() === 'loading') {
                     <span class="pdp__spinner" aria-hidden="true"></span>
                     <span>Agregando...</span>
                   } @else {
@@ -468,6 +474,7 @@ export class PdpComponent implements OnInit {
   readonly selectedVariant = signal<ProductVariant | null>(null);
   readonly descriptionExpanded = signal(false);
   readonly isFavorite     = signal(false);
+  readonly isAdded        = signal(false);
 
   // Estados del carrito (derivados del CartService)
   readonly cartStatus  = this.cartService.status;
@@ -518,11 +525,17 @@ export class PdpComponent implements OnInit {
   }
 
   addToCart(): void {
+    if (this.isAdded()) return;
     const p = this.product();
     const v = this.selectedVariant();
     if (!p || !v) return;
     this.cartService.addItem(p, v, 1);
     this.analytics.trackAddToCart(p.id, p.name, v.label, v.price, 1);
+
+    this.isAdded.set(true);
+    setTimeout(() => {
+      this.isAdded.set(false);
+    }, 1500);
   }
 
   onCrossSellingAdd(event: { product: Product; variant: ProductVariant }): void {

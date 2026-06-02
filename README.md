@@ -1,4 +1,4 @@
-# 🏥 Mifarma — E-commerce Farmacia (Angular SSR Challenge)
+# Mifarma — E-commerce Farmacia (Angular SSR Challenge)
 
 [![Angular](https://img.shields.io/badge/Angular-21.x-DD0031?style=flat-square&logo=angular)](https://angular.io)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript)](https://typescriptlang.org)
@@ -6,122 +6,120 @@
 [![Jest](https://img.shields.io/badge/Testing-Jest_%2B_Testing_Library-C21325?style=flat-square&logo=jest)](https://jestjs.io)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-Challenge técnico de e-commerce para farmacia online con Angular 17+ SSR, Signals, Feature-Sliced Design y pipeline de CI/CD para VPS Hostinger.
+Documentación del challenge técnico orientado a la construcción de un e-commerce para farmacia online. El proyecto ha sido desarrollado utilizando Angular 17+ con Server-Side Rendering (SSR), manejo de estado a través de Signals, arquitectura basada en Feature-Sliced Design y un pipeline de Integración y Despliegue Continuo (CI/CD) diseñado para un entorno de Virtual Private Server (VPS).
 
 ---
 
-## 📁 Árbol de Directorios
+## 1. Estructura de Directorios
 
-```
+```text
 mifarma/
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml             # CI/CD: Test → Build → Deploy VPS
+│       └── deploy.yml             # Pipeline CI/CD: Test → Build → Deploy en VPS
 ├── src/
 │   ├── app/
-│   │   ├── core/                  # Singleton services (providedIn: 'root')
+│   │   ├── core/                  # Servicios Singleton (providedIn: 'root')
 │   │   │   ├── services/
-│   │   │   │   ├── product-mock.service.ts  # Catálogo + Búsqueda Semántica
-│   │   │   │   ├── cart.service.ts          # Carrito con Optimistic UI
-│   │   │   │   └── analytics.service.ts     # Event tracking con throttle
+│   │   │   │   ├── product-mock.service.ts  # Mock de catálogo y lógica de búsqueda semántica
+│   │   │   │   ├── cart.service.ts          # Gestión del carrito mediante Optimistic UI
+│   │   │   │   └── analytics.service.ts     # Seguimiento de eventos con control de frecuencia (throttle)
 │   │   │   ├── interceptors/
 │   │   │   └── guards/
-│   │   ├── shared/                # Componentes reutilizables (dumb)
+│   │   ├── shared/                # Componentes reutilizables (dumb components)
 │   │   │   ├── components/
 │   │   │   │   └── product-card/
 │   │   │   │       └── product-card.component.ts
 │   │   │   └── directives/
 │   │   │       └── track-event.directive.ts
-│   │   ├── features/              # Feature Slices (smart components)
+│   │   ├── features/              # Divisiones lógicas por funcionalidad (smart components)
 │   │   │   ├── plp/               # Product Listing Page
 │   │   │   │   ├── plp.component.ts
 │   │   │   │   └── plp.component.scss
 │   │   │   ├── pdp/               # Product Detail Page
 │   │   │   │   ├── pdp.component.ts
 │   │   │   │   ├── pdp.component.scss
-│   │   │   │   └── pdp.component.spec.ts    # Test crítico: variantes
+│   │   │   │   └── pdp.component.spec.ts    # Pruebas unitarias de selección de variantes
 │   │   │   └── cart/
 │   │   ├── app.component.ts
-│   │   ├── app.config.ts          # withViewTransitions() + provideRouter()
-│   │   └── app.routes.ts          # Lazy routes PLP / PDP
+│   │   ├── app.config.ts          # Configuración global (withViewTransitions, provideRouter)
+│   │   └── app.routes.ts          # Enrutamiento con carga diferida (Lazy Loading) para PLP / PDP
 │   ├── design-tokens/
-│   │   ├── _tokens.base.scss      # Primitivas compartidas (spacing, typography)
-│   │   ├── _tokens.inkafarma.scss # CSS vars brand Inkafarma
-│   │   └── _tokens.mifarma.scss   # CSS vars brand Mifarma (override)
+│   │   ├── _tokens.base.scss      # Primitivas CSS compartidas (espaciado, tipografía)
+│   │   ├── _tokens.inkafarma.scss # Variables CSS específicas de la marca Inkafarma
+│   │   └── _tokens.mifarma.scss   # Variables CSS específicas de la marca Mifarma (sobreescritura)
 │   └── styles/
-│       └── styles.scss            # Entry point + View Transitions globals
-├── ecosystem.config.js            # PM2 cluster config (SSR production)
-├── nginx.conf                     # Nginx reverse proxy + SSL + gzip
-├── jest.config.js                 # Jest + ts-jest + Testing Library
-└── setup-jest.ts                  # Matchers de @testing-library/jest-dom
+│       └── styles.scss            # Punto de entrada de estilos globales y transiciones
+├── ecosystem.config.js            # Configuración de cluster PM2 para producción SSR
+├── nginx.conf                     # Configuración de Proxy Inverso Nginx, SSL y compresión gzip
+├── jest.config.js                 # Configuración de Jest, ts-jest y Testing Library
+└── setup-jest.ts                  # Configuración de aserciones para @testing-library/jest-dom
 ```
 
 ---
 
-## 🚀 Inicio Rápido
+## 2. Instrucciones de Despliegue Local
 
 ```bash
-# Clonar e instalar
+# Clonar el repositorio e instalar dependencias
 git clone https://github.com/tu-usuario/mifarma.git
 cd mifarma
 npm install
 
-# Desarrollo (con HMR)
+# Inicializar servidor de desarrollo con Hot Module Replacement (HMR)
 npm start
 
-# Build SSR producción
+# Compilar proyecto para entorno de producción con Server-Side Rendering (SSR)
 npm run build
 
-# Ejecutar SSR localmente
+# Ejecutar el servidor Node.js localmente
 npm run serve:ssr:mifarma
 
-# Tests
+# Ejecución de pruebas unitarias
 npm test
 npm test -- --coverage
 ```
 
 ---
 
-## 🏗️ Decisiones de Arquitectura
+## 3. Decisiones Arquitectónicas
 
 ### Feature-Sliced Design (FSD)
 
-La estructura `core/` → `shared/` → `features/` aplica una regla de dependencias unidireccional:
+Se ha implementado la metodología Feature-Sliced Design estableciendo una regla de dependencias estrictamente unidireccional entre los módulos `core/`, `shared/` y `features/`:
 
-- **`core/`** → Solo servicios singleton (`providedIn: 'root'`). Sin dependencias de features.
-- **`shared/`** → Componentes "dumb" reutilizables. Sin lógica de negocio.
-- **`features/`** → Componentes "smart" que orquestan servicios. Solo importan de `core/` y `shared/`.
+- **`core/`**: Exclusivo para servicios registrados como singleton (`providedIn: 'root'`). No posee dependencias hacia módulos de funcionalidades.
+- **`shared/`**: Contiene componentes presentacionales ("dumb components") diseñados para alta reutilización, abstrayéndolos de la lógica de negocio.
+- **`features/`**: Contiene componentes de negocio ("smart components") encargados de orquestar servicios. Poseen dependencias válidas únicamente hacia `core/` y `shared/`.
 
-Esta separación garantiza que agregar una nueva feature (ej: checkout) no rompa las existentes.
+Esta jerarquía mitiga el riesgo de regresiones y asegura que la integración de nuevas funcionalidades mantenga la cohesión del sistema.
 
-### Standalone Components (Cero NgModules)
+### Componentes Independientes (Standalone Components)
 
-Todos los componentes usan `standalone: true`. Esto elimina el boilerplate de NgModules y permite tree-shaking granular por componente, reduciendo el bundle size.
+Toda la aplicación ha sido diseñada utilizando componentes con la configuración `standalone: true`. Esta decisión arquitectónica prescinde del paradigma basado en `NgModules`, facilitando una optimización más exhaustiva del tamaño del bundle final a través de un proceso de *tree-shaking* a nivel de componente.
 
 ---
 
-## ❓ Respuestas Técnicas del Challenge
+## 4. Respuestas a Requerimientos Técnicos
 
-### 1. ¿Qué decisiones tomaste para mejorar la performance?
+### 4.1. Decisiones de Optimización de Rendimiento
 
-**a) NgOptimizedImage + `priority` en la imagen LCP (PDP)**
+**a) Implementación de NgOptimizedImage y directiva `priority` para Largest Contentful Paint (LCP)**
 
-`NgOptimizedImage` es la decisión con mayor impacto individual en LCP. Con `priority=true`, Angular automáticamente:
-- Inyecta `fetchpriority="high"` en el atributo del `<img>` → el browser lo carga antes que otros recursos.
-- En SSR, genera un `<link rel="preload" as="image">` en el `<head>` del HTML generado → el browser inicia la descarga **antes** de que el parser alcance la etiqueta `<img>`.
-- Deshabilita el lazy loading nativo para la imagen LCP (las otras imágenes usan `loading="lazy"`).
+La adopción de `NgOptimizedImage` representa la optimización individual de mayor impacto sobre la métrica LCP. La atribución `priority=true` induce al compilador de Angular a ejecutar las siguientes acciones automatizadas:
+- Inserción del atributo `fetchpriority="high"` dentro del elemento `<img>`, escalando la prioridad del recurso a nivel de navegador.
+- Durante el ciclo de renderizado en el servidor (SSR), el sistema inyecta una etiqueta `<link rel="preload" as="image">` en la cabecera HTML, iniciando la descarga antes del análisis semántico del documento.
+- Desactivación de la carga diferida (`loading="lazy"`) para la imagen catalogada como LCP, garantizando su renderizado inmediato.
 
-Sin estos hints, el browser descubre la imagen LCP tarde (después de parsear el HTML, ejecutar JS y hacer layout), lo que puede sumar 500-1000ms al LCP.
+**b) Server-Side Rendering (SSR) mediante `@angular/ssr`**
 
-**b) SSR (Server-Side Rendering) con `@angular/ssr`**
+La delegación del renderizado inicial al servidor provee mejoras medibles en métricas críticas (Core Web Vitals):
+- **First Contentful Paint (FCP)**: Reducción sustancial del tiempo de pintado al entregar el DOM completo desde la respuesta inicial.
+- **Largest Contentful Paint (LCP)**: Estabilización del proceso de descubrimiento de la imagen LCP, ya que ésta es parte integral del documento HTML recibido.
+- **Technical SEO**: Aseguramiento de accesibilidad para rastreadores de motores de búsqueda que carecen de capacidad de ejecución de JavaScript, facilitando la indexación temprana.
+- **Time to Interactive (TTI)**: La funcionalidad `withEventReplay()` retiene las interacciones del usuario ocurridas previo a la fase de hidratación del framework, para ejecutarlas de manera diferida.
 
-El HTML llega al browser completamente renderizado. Beneficios medibles en Core Web Vitals:
-- **FCP (First Contentful Paint)** mejora drásticamente: el usuario ve contenido desde el primer byte HTML, sin esperar que descargue, parsee y ejecute el bundle JS.
-- **LCP** mejora porque la imagen principal ya está en el HTML inicial, no se inserta dinámicamente por JS.
-- **SEO técnico**: los crawlers de Google leen el contenido sin necesidad de renderizar JS (aunque Googlebot sí renderiza JS, los crawlers de redes sociales no).
-- **TTI (Time to Interactive)**: con `withEventReplay()`, los clics del usuario antes de la hidratación se capturan y reproducen automáticamente.
-
-**c) `@defer` para el carrusel de Cross-Selling**
+**c) Bloques Diferibles (`@defer`)**
 
 ```typescript
 @defer (on viewport; prefetch on idle) {
@@ -129,317 +127,177 @@ El HTML llega al browser completamente renderizado. Beneficios medibles en Core 
 } @placeholder { ... }
 ```
 
-- `on viewport`: Angular no renderiza el carrusel hasta que el usuario hace scroll hacia esa sección. El componente no se descarga, no se parsea, no se renderiza.
-- `prefetch on idle`: cuando el browser está libre (requestIdleCallback), pre-descarga el chunk del componente en background. El resultado: el carrusel parece cargar instantáneamente cuando aparece en el viewport.
-- Impacto en LCP: elimina código del critical rendering path. Menos JS → parser más rápido → LCP más bajo.
+La estrategia de hidratación parcial permite excluir componentes no críticos (e.g., el carrusel de productos relacionados) de la ruta crítica de renderizado inicial. Su carga solo es ejecutada bajo demanda semántica (`on viewport`) y precargada durante tiempos inactivos (`prefetch on idle`), aliviando la carga computacional inicial del hilo principal.
 
-**d) Lazy Loading de Rutas**
+**d) Carga Diferida de Rutas (Lazy Loading)**
 
-PLP y PDP son chunks separados (`loadComponent`). El router descarga solo el chunk necesario para la ruta actual.
+Las vistas de lista de productos (PLP) y detalle de producto (PDP) se han encapsulado en fragmentos (chunks) independientes. El enrutador de Angular solicita exclusivamente el archivo binario necesario para la vista solicitada.
 
 ---
 
-### 2. ¿Cómo estructurarías esta solución para soportar múltiples marcas?
+### 4.2. Estrategia Multi-marca (White-label Architecture)
 
-**Arquitectura Multi-brand con CSS Custom Properties + Design Tokens**
+**Implementación de Tokens de Diseño y Propiedades Personalizadas CSS**
 
-El modelo implementado separa tres capas:
+El diseño establece tres capas jerárquicas:
 
-**Capa 1 — Primitivas (`_tokens.base.scss`)**
-Variables de escala (spacing, typography, radios) que no cambian entre marcas. Se usan como fuente única de verdad para valores numéricos.
+**Nivel 1: Primitivas Base (`_tokens.base.scss`)**
+Contiene constantes de escala geométrica (espaciados, tipografías, dimensiones) inmutables a nivel de negocio.
 
-**Capa 2 — Alias de marca (`_tokens.inkafarma.scss`, `_tokens.mifarma.scss`)**
-Mapean las primitivas a nombres semánticos en `:root` o `[data-brand="X"]`:
+**Nivel 2: Alias de Identidad (`_tokens.inkafarma.scss`, `_tokens.mifarma.scss`)**
+Asigna valores específicos de marca vinculados mediante selectores de atributo en la raíz del documento:
 ```css
 [data-brand="mifarma"] {
-  --color-brand-primary: hsl(352, 78%, 46%);  /* Rojo Mifarma */
+  --color-brand-primary: hsl(352, 78%, 46%);
 }
 [data-brand="inkafarma"] {
-  --color-brand-primary: hsl(144, 58%, 38%);  /* Verde Inkafarma */
+  --color-brand-primary: hsl(144, 58%, 38%);
 }
 ```
 
-**Capa 3 — Componentes**
-Solo usan `var(--color-brand-primary)`, nunca valores hardcoded. El swap de marca es un cambio de atributo HTML, **cero cambios en componentes**.
-
-**Implementación en SSR:**
-El servidor lee el dominio del request (`mifarma.pe` vs `inkafarma.pe`) y establece `<body data-brand="mifarma">` en el HTML generado. El cliente hidrata sobre ese DOM.
-
-**Escalabilidad:**
-Agregar una nueva marca (ej: "Pharmaone") requiere solo:
-1. Crear `_tokens.pharmaone.scss` con sus variables
-2. En el servidor, mapear `pharmaone.pe` → `data-brand="pharmaone"`
-
-Sin tocar un solo componente Angular.
+**Nivel 3: Consumo en Componentes**
+Los componentes se limitan al consumo de variables genéricas (`var(--color-brand-primary)`). La conmutación de marca en tiempo de ejecución (o desde el servidor SSR basado en el dominio de petición HTTP) requiere únicamente la modificación de la etiqueta `<body data-brand="x">`, sin requerir refactorización a nivel aplicativo.
 
 ---
 
-### 3. Si esta página presenta problemas de LCP en producción, ¿cómo lo abordarías?
+### 4.3. Resolución de Anomalías en Largest Contentful Paint (LCP)
 
-**Diagnóstico sistemático (proceso antes de optimizar)**
+**Diagnóstico Sistemático**
 
-Primero identifico el elemento LCP exacto y su causa con:
+Ante reportes de degradación en producción, el proceso inicial radica en la identificación del elemento LCP exacto mediante auditoría profunda:
 ```bash
-# Lighthouse CI en el entorno de producción real (no localhost)
 npx lighthouse https://mifarma.tudominio.com/producto/prod-001 \
   --output=json --output-path=lcp-report.json
 ```
 
-Los problemas típicos de LCP en una PDP y sus soluciones:
+Las medidas de contención contempladas incluyen:
 
-**Problema A: Imagen LCP con `fetchpriority` bajo**
-- Síntoma: el waterfall de red muestra la imagen LCP iniciando tarde.
-- Solución: `NgOptimizedImage` con `priority=true` (ya implementado). Verificar que no haya otro `<img priority>` que "robe" el slot.
+1. **Latencia Alta de Primer Byte (TTFB > 600ms)**
+   - Despliegue de estrategias de almacenamiento en caché de fragmentos renderizados desde el nivel del Proxy Inverso (Nginx `proxy_cache`).
+   - Evaluación de Streaming SSR para distribución escalonada del documento HTML.
 
-**Problema B: TTFB alto (>600ms)**
-- Causa: la petición SSR tarda en resolver (base de datos lenta, cold start de Node.js).
-- Solución A: Caché de respuestas SSR en Nginx con `proxy_cache`. Para páginas de producto, cachear 60s el HTML completo.
-- Solución B: Streaming SSR (`renderApplication` con `inlineCriticalCss`) para enviar el `<head>` al browser mientras el body se sigue generando.
-- Solución C: Distribuir el edge con CDN (Cloudflare Workers) para SSR en el nodo más cercano al usuario.
+2. **Entrega Subóptima de Imágenes Críticas**
+   - Integración obligatoria de una Content Delivery Network (CDN) configurada para negociar formatos de alta compresión (WebP/AVIF) dinámicamente.
 
-**Problema C: Imagen alojada en servidor lento**
-- Solución: migrar imágenes a un CDN (Cloudflare Images, Imgix) con compresión automática a WebP/AVIF y entrega desde el PoP más cercano.
+3. **Interferencias en la Ruta Crítica de Renderizado**
+   - Confirmación de la correcta ejecución del servicio de *Inlining* para el CSS crítico (`inlineCriticalCss: true`) y perfilado de rendimiento mediante `chrome://tracing`.
 
-**Problema D: Render-blocking CSS/JS**
-- Verificar que el CSS crítico esté inlined en el `<head>` (Angular lo hace automáticamente en SSR con `inlineCriticalCss: true`).
-- Analizar con `chrome://tracing` o Chrome DevTools Performance panel.
-
-**KPIs objetivo:**
-| Métrica | Objetivo |
-|---------|----------|
-| LCP     | < 2.5s   |
-| FID/INP | < 200ms  |
-| CLS     | < 0.1    |
-| TTFB    | < 600ms  |
+| Indicador | Límite Técnico |
+|-----------|----------------|
+| LCP       | < 2.5s         |
+| FID/INP   | < 200ms        |
+| CLS       | < 0.1          |
+| TTFB      | < 600ms        |
 
 ---
 
-### 4. ¿Cómo evitarías que eventos de Analytics se disparen múltiples veces en una SPA?
+### 4.4. Mitigación de Eventos Analíticos Duplicados
 
-**El problema en una SPA:**
-En una SPA, el usuario puede:
-1. Hacer doble-clic accidental en "Agregar al carrito"
-2. Navegar rápidamente hacia/desde una página, disparando `view_item` dos veces
-3. En SSR con hidratación, un evento puede ejecutarse tanto en el servidor como en el cliente
+**Estrategia de Defensa Multicapa:**
 
-**Soluciones implementadas (defense in depth):**
-
-**Nivel 1 — `throttleTime` en el `AnalyticsService`:**
+**Capa 1: Limitación de Frecuencia (Throttle) a Nivel de Servicio**
 ```typescript
 this._eventBus$.pipe(
   throttleTime(500, undefined, { leading: true, trailing: false })
 ).subscribe(event => this._dispatch(event));
 ```
-Todos los eventos pasan por un Subject con throttle de 500ms. El primer evento se procesa; los siguientes dentro de la ventana se descartan silenciosamente.
+El bus de eventos central procesa las solicitudes respetando ventanas de 500ms, descartando llamadas subsecuentes idénticas originadas por eventos de doble clic.
 
-**Nivel 2 — Directiva `[trackEvent]` con `throttleTime + takeUntilDestroyed`:**
-```html
-<button trackEvent [trackEventName]="'add_to_cart'" ...>
-```
-`takeUntilDestroyed(destroyRef)` cancela la suscripción automáticamente cuando el componente se destruye, previniendo eventos fantasma de componentes desmontados.
+**Capa 2: Control del Ciclo de Vida del Componente**
+La directiva personalizada de seguimiento gestiona sus subscripciones utilizando el operador `takeUntilDestroyed()`, erradicando la ejecución de eventos en componentes desmontados.
 
-**Nivel 3 — Guard de SSR:**
+**Capa 3: Salvaguarda de Entorno SSR**
 ```typescript
 private _dispatch(event): void {
-  if (typeof window === 'undefined') return; // SSR guard
-  // ...
+  if (typeof window === 'undefined') return;
 }
 ```
-En Node.js (SSR), `window` no existe. Este guard previene que los eventos se "disparen" en el servidor, donde no hay GA4 ni dataLayer.
-
-**Nivel 4 — `distinctUntilChanged` para eventos de tipo `view_*`:**
-Para `view_item`, aplicar `distinctUntilChanged` evita re-disparos si el mismo componente se re-renderiza (ej: por un cambio de Signal no relacionado).
-
-**En producción (GTM):**
-La capa de deduplicación final es GTM con reglas de "trigger exception" para evitar duplicados en eventos de sesión.
+Inhibe la emisión inorgánica de eventos hacia las APIs de DataLayer durante los ciclos de ejecución del entorno Node.js.
 
 ---
 
-### 5. ¿Qué consideraciones SEO tendrías en cuenta para esta página en un entorno real?
+### 4.5. Consideraciones sobre Posicionamiento Orgánico (SEO)
 
-**a) SSR es condición sine qua non**
+**a) Renderizado desde el Servidor (SSR)**
+Garantiza el abastecimiento de un HTML semántico estructurado para los rastreadores web síncronos (e.g., motores secundarios y clientes de redes sociales).
 
-Sin SSR, los crawlers que no ejecutan JS (Bing, Pinterest, WhatsApp, Slack) no ven ningún contenido. Google sí renderiza JS, pero lo hace en una segunda cola diferida (días después del crawleo inicial). SSR garantiza que el HTML indexable esté disponible en el primer request.
+**b) Metaetiquetas Dinámicas**
+Modificación paramétrica de las etiquetas `<title>` y `<meta name="description">` mediante inyección directa en el encabezado (`<head>`), respetando los límites canónicos de 155 caracteres.
 
-**b) `<title>` y `<meta name="description">` dinámicos por producto**
+**c) Datos Estructurados (Schema.org)**
+Emisión nativa del marcado semántico en formato microdatos (o JSON-LD) para las entidades `Product`, `BreadcrumbList` y `AggregateRating`, incentivando la aparición en fragmentos enriquecidos (Rich Snippets).
 
-```typescript
-// En PdpComponent.ngOnInit()
-this.titleService.setTitle(`${product.name} — Comprar online | Mifarma`);
-this.metaService.updateTag({
-  name: 'description',
-  content: `${product.description.slice(0, 155)}. Precio: S/ ${price}.`
-});
-```
-
-La meta description está limitada a 155 caracteres (snippet visible en SERPs). Se inyecta con el servicio `Meta` de Angular, que en SSR escribe directamente en el `<head>` del HTML.
-
-**c) Schema.org (Structured Data)**
-
-Para productos de farmacia, implementar `Product` schema:
-```html
-<div itemscope itemtype="https://schema.org/Product">
-  <span itemprop="name">{{ product.name }}</span>
-  <span itemprop="price" content="{{ price }}">S/ {{ price }}</span>
-  <meta itemprop="priceCurrency" content="PEN" />
-</div>
-```
-Habilita Rich Results (precio, rating, disponibilidad) en los SERPs → mayor CTR.
-
-También implementado: `BreadcrumbList` y `AggregateRating` schemas.
-
-**d) URLs semánticas y canónicas**
-
-- Estructura: `/producto/{id-slug}` (ej: `/producto/pharamol-antigripal-caja-10-tab`)
-- `<link rel="canonical">` para evitar contenido duplicado entre variantes
-- Sitemap XML generado programáticamente con todas las URLs de productos
-
-**e) Core Web Vitals como factor de ranking**
-
-Google usa CWV como factor de ranking desde 2021. Las optimizaciones de LCP, CLS e INP son también optimizaciones de SEO directo.
-
-**f) `<hreflang>` para contenido multi-idioma**
-
-Si se expande a otros países (Bolivia, Ecuador), declarar alternativas de idioma/región para evitar que Google las trate como contenido duplicado.
-
-**g) Evitar contenido bloqueado por JavaScript**
-
-Usar `@defer` solo para contenido no crítico para SEO (reseñas, cross-selling). El H1, precio y descripción siempre deben estar en el HTML del servidor.
+**d) Higiene de Enlaces y Arquitectura**
+Uso mandatorio de la etiqueta `<link rel="canonical">` previniendo penalizaciones algorítmicas por duplicidad en variantes del mismo producto, soportado por rutas lógicas (/producto/{identificador-semantico}).
 
 ---
 
-## 🧪 Testing
+## 5. Pruebas Automatizadas
 
 ```bash
-# Ejecutar todos los tests
+# Ejecución completa de suites de pruebas
 npm test
 
-# Modo watch
+# Ejecución bajo modelo de observación
 npm test -- --watch
 
-# Con cobertura
+# Emisión de reportes de cobertura de código
 npm test -- --coverage
-
-# Test específico
-npm test -- --testPathPattern=pdp.component.spec
 ```
 
-**Test crítico: Selector de variantes (PDP)**
-
-El test `pdp.component.spec.ts` verifica que:
-1. El precio de la variante inicial (Caja) se muestra correctamente
-2. Al seleccionar "Sobre x 1 tableta", el precio cambia a S/ 1.80
-3. `aria-pressed` se actualiza en cada botón de variante
-4. `CartService.addItem` recibe la variante correcta al agregar al carrito
+La suite `pdp.component.spec.ts` garantiza la integridad de la funcionalidad primaria:
+1. Exactitud de propagación de cambios de variante de producto.
+2. Actualización de atributos de accesibilidad técnica (`aria-pressed`).
+3. Interconexión íntegra con la inyección de dependencias hacia el `CartService`.
 
 ---
 
-## 🚀 Deploy en VPS Hostinger (SSR)
+## 6. Procedimiento de Despliegue (Vercel Serverless)
 
-### Requisitos del servidor
+La aplicación ha sido configurada bajo una arquitectura Serverless utilizando la plataforma Vercel, delegando la responsabilidad de infraestructura física y aprovechando sus capacidades nativas de SSR (Server-Side Rendering) y distribución global (Edge Network).
 
-```bash
-# Node.js 20+ LTS
-nvm install 20 && nvm use 20
+Enlace de producción: [Mifarma SSR Demo](https://project-angular-standalone-mifarma.vercel.app/productos)
 
-# PM2 (gestor de procesos)
-npm install -g pm2
+### Protocolo de Integración y Despliegue Continuo (CI/CD)
 
-# Nginx
-apt-get install nginx certbot python3-certbot-nginx
+El flujo de Integración y Entrega Continua (CI/CD) está completamente automatizado mediante la conexión directa entre Vercel y el repositorio de código fuente (GitHub).
+
+**Procedimiento para la actualización de la aplicación:**
+
+Para desplegar una nueva versión que contenga correcciones, nuevas funcionalidades o cambios de configuración, el flujo se centraliza exclusivamente en el control de versiones local:
+
+1. Confirmar los cambios mediante Git (`git commit`) en la rama de despliegue principal (generalmente `main`).
+2. Sincronizar dichos cambios con el repositorio remoto ejecutando un `git push`.
+
+```text
+Estructura del proceso de actualización automatizado:
+Push hacia rama 'main'
+  └─ Intercepción de Webhook por Vercel
+       ├─ Fase 1: Descarga determinista de dependencias
+       ├─ Fase 2: Compilación de artefactos de producción (Angular SSR Builder)
+       ├─ Fase 3: Aprovisionamiento de Funciones Serverless para Node.js
+       └─ Fase 4: Sustitución inmutable (Zero-Downtime) y distribución en CDN
 ```
 
-### Deploy manual inicial
-
-```bash
-# 1. Build en tu máquina local
-npm run build
-
-# 2. Subir dist/ al VPS
-rsync -avz ./dist/ usuario@tu-vps:/var/www/mifarma/dist/
-
-# 3. En el VPS: instalar deps y arrancar
-cd /var/www/mifarma
-npm ci --omit=dev
-pm2 start ecosystem.config.js --env production
-pm2 save
-pm2 startup  # Genera comando para autostart en reboot
-
-# 4. Configurar Nginx
-cp nginx.conf /etc/nginx/sites-available/mifarma
-ln -s /etc/nginx/sites-available/mifarma /etc/nginx/sites-enabled/
-nginx -t && systemctl reload nginx
-
-# 5. SSL con Let's Encrypt
-certbot --nginx -d mifarma.tudominio.com
-```
-
-### CI/CD Automático (GitHub Actions)
-
-Cada push a `main` dispara el pipeline:
-
-```
-Push → main
-  └─ Job: build-and-test
-       ├─ npm ci
-       ├─ npm test (Jest)
-       └─ npm run build (SSR)
-            └─ Job: deploy (si build OK)
-                 ├─ rsync dist/ → VPS
-                 ├─ SSH: npm ci --omit=dev
-                 ├─ SSH: pm2 reload (Zero-Downtime)
-                 └─ Health check HTTP 200
-```
-
-**Secrets requeridos en GitHub:**
-
-| Secret | Descripción |
-|--------|-------------|
-| `VPS_HOST` | IP o dominio del VPS |
-| `VPS_USER` | Usuario SSH |
-| `VPS_SSH_KEY` | Llave privada SSH |
-| `VPS_PORT` | Puerto SSH (default: 22) |
-
-### Zero-Downtime Reload
-
-```bash
-# pm2 reload (no pm2 restart) recarga workers uno a uno:
-# Worker 1 levanta → acepta requests → Worker 0 se cierra
-# Sin ningún 503 de downtime
-pm2 reload ecosystem.config.js --env production
-```
+Este esquema de "Despliegues Atómicos" garantiza que la plataforma siempre responda con la versión actual intacta si la nueva compilación resulta defectuosa, anulando cualquier ventana de indisponibilidad.
 
 ---
 
-## 🎨 Multi-Brand Support
+## 7. Pila Tecnológica Consolidada
 
-```html
-<!-- Inkafarma (default) -->
-<body data-brand="inkafarma">
-
-<!-- Mifarma -->
-<body data-brand="mifarma">
-```
-
-Los tokens de diseño se cargan via CSS Custom Properties. El cambio de marca no requiere recompilación ni cambios en los componentes Angular.
-
----
-
-## 📊 Tech Stack Completo
-
-| Categoría | Tecnología | Justificación |
-|-----------|------------|---------------|
-| Framework | Angular 21 + SSR | Core Web Vitals, SEO técnico |
-| Estado | Signals (`signal()`, `computed()`) | Reactividad granular, sin Zone.js overhead |
-| Estado async | RxJS (solo interceptores y streams complejos) | Interop con HTTP, throttle, takeUntilDestroyed |
-| Estilos | SCSS + CSS Custom Properties | Multi-brand, Mobile-First, sin runtime overhead |
-| Testing | Jest + @testing-library/angular | Sin DOM fake, tests centrados en el usuario |
-| Process Manager | PM2 (cluster mode) | Zero-downtime reload, multi-CPU |
-| Reverse Proxy | Nginx | Gzip, SSL termination, static assets cache |
-| CI/CD | GitHub Actions | Automatización completa del pipeline |
+| Clasificación | Tecnología Seleccionada | Justificación Técnica |
+|---------------|-------------------------|-----------------------|
+| Marco de Trabajo | Angular 21 + SSR | Rendimiento FCP/LCP superior y robustez SEO. |
+| Gestión de Estado | Signals API | Sincronización fina de UI exenta del overhead de Zone.js. |
+| Tratamiento de Streams | RxJS | Control de eventos de alta frecuencia, peticiones HTTP asíncronas e interceptores de estado. |
+| Procesamiento de Estilos | SCSS + CSS Custom Properties | Implementación white-label bajo coste marginal nulo en ejecución. |
+| Entorno de Pruebas | Jest + Angular Testing Library | Aseguramiento de calidad centrado en comportamiento real del usuario. |
+| Agente de Ejecución | PM2 Cluster Mode | Orquestación eficiente de recursos computacionales multinúcleo en NodeJS. |
+| Capa Proxy / HTTP | Nginx | Terminación SSL, balanceo de carga y políticas de compresión de red. |
 
 ---
 
-## 📜 Licencia
+## 8. Licenciamiento
 
-MIT — Renzo Chávez · Challenge Técnico Mifarma 2026
+Este código fuente se encuentra distribuido bajo los términos de la Licencia MIT.
+Autor: Renzo Chávez — Challenge Técnico 2026.
