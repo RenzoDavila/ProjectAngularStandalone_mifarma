@@ -1,0 +1,101 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// DESIGN TOKENS — INKAFARMA BRAND
+//
+// Modelo Multi-brand: estos tokens sobreescriben las primitivas base.
+// Cargado condicionalmente mediante la variable CSS --brand en :root
+// o mediante body[data-brand="inkafarma"].
+//
+// Para soporte Multi-brand en SSR, el atributo data-brand se establece
+// en el servidor según el dominio de la petición HTTP.
+// ═══════════════════════════════════════════════════════════════════════════
+@use './tokens.base' as base;
+
+// ─── Paleta Inkafarma ────────────────────────────────────────────────────────
+// Color primario: Verde Inkafarma (HSL para variaciones controladas)
+$color-primary-50:  hsl(144, 70%, 95%);
+$color-primary-100: hsl(144, 65%, 88%);
+$color-primary-200: hsl(144, 60%, 75%);
+$color-primary-300: hsl(144, 58%, 60%);
+$color-primary-400: hsl(144, 56%, 48%);
+$color-primary-500: hsl(144, 58%, 38%);  // ← Color principal Inkafarma #1E7E45
+$color-primary-600: hsl(144, 60%, 30%);
+$color-primary-700: hsl(144, 62%, 22%);
+$color-primary-800: hsl(144, 65%, 15%);
+$color-primary-900: hsl(144, 70%, 8%);
+
+// Color de acento (CTA): Naranja Inkafarma
+$color-accent-400: hsl(28, 92%, 60%);
+$color-accent-500: hsl(28, 90%, 52%);  // ← #F57C00
+$color-accent-600: hsl(28, 88%, 42%);
+
+// Neutros
+$color-neutral-0:   #ffffff;
+$color-neutral-50:  hsl(210, 20%, 98%);
+$color-neutral-100: hsl(210, 16%, 93%);
+$color-neutral-200: hsl(210, 14%, 86%);
+$color-neutral-300: hsl(210, 12%, 71%);
+$color-neutral-400: hsl(210, 10%, 54%);
+$color-neutral-500: hsl(210, 8%, 38%);
+$color-neutral-600: hsl(210, 10%, 27%);
+$color-neutral-700: hsl(210, 12%, 18%);
+$color-neutral-800: hsl(210, 14%, 12%);
+$color-neutral-900: hsl(210, 16%, 7%);
+
+// Semánticos
+$color-success:  hsl(142, 72%, 35%);
+$color-warning:  hsl(45, 96%, 48%);
+$color-error:    hsl(0, 72%, 51%);
+$color-info:     hsl(207, 90%, 54%);
+
+// ─── CSS Custom Properties (Variables en cascada) ────────────────────────────
+// Usadas en todos los componentes. El swap de marca SOLO requiere cambiar
+// estas variables en :root, sin tocar el markup ni los componentes.
+:root,
+[data-brand="inkafarma"] {
+  // Primarios
+  --color-brand-primary:        #{$color-primary-500};
+  --color-brand-primary-light:  #{$color-primary-100};
+  --color-brand-primary-dark:   #{$color-primary-700};
+  --color-brand-accent:         #{$color-accent-500};
+  --color-brand-accent-hover:   #{$color-accent-600};
+
+  // Superficies
+  --color-bg-app:      #{$color-neutral-50};
+  --color-bg-card:     #{$color-neutral-0};
+  --color-bg-header:   #{$color-primary-500};
+  --color-bg-footer:   #{$color-primary-700};
+
+  // Texto
+  --color-text-primary:    #{$color-neutral-800};
+  --color-text-secondary:  #{$color-neutral-500};
+  --color-text-on-brand:   #{$color-neutral-0};
+  --color-text-price:      #{$color-primary-600};
+  --color-text-price-old:  #{$color-neutral-400};
+  --color-text-discount:   #{$color-error};
+
+  // Bordes
+  --color-border:       #{$color-neutral-200};
+  --color-border-focus: #{$color-primary-400};
+
+  // Semánticos
+  --color-success: #{$color-success};
+  --color-error:   #{$color-error};
+  --color-warning: #{$color-warning};
+
+  // Tipografía
+  --font-family-base:    #{base.$font-family-sans};
+  --font-family-heading: #{base.$font-family-heading};
+
+  // Espaciado (tokens semánticos)
+  --spacing-card-padding: #{base.$spacing-4};
+  --spacing-section:      #{base.$spacing-12};
+
+  // Radios
+  --radius-card:   #{base.$radius-lg};
+  --radius-button: #{base.$radius-full};
+  --radius-input:  #{base.$radius-md};
+
+  // Sombras
+  --shadow-card:        #{base.$shadow-md};
+  --shadow-card-hover:  #{base.$shadow-xl};
+}

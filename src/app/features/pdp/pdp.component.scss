@@ -1,0 +1,802 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// PDP COMPONENT STYLES — Inkafarma Design System
+// Tokens extraídos del CSS del Figma:
+//   • #354159 — navy dark (headings, textos principales)
+//   • #7E8BA7 — gray medium (labels, textos secundarios)
+//   • #1A8FF1 — blue (CTA secundario, bordes activos, links)
+//   • #17A15B — green (CTA primario, favorito activo)
+//   • #E4E8F0 — border light
+//   • #F0F2F6 — border separator (accordion)
+//   • #F8F8F8 — background del body
+// ═══════════════════════════════════════════════════════════════════════════
+@use 'sass:color';
+@use '../../../design-tokens/tokens.base' as base;
+
+// ─── Variables locales del componente ────────────────────────────────────────
+$navy:         #354159;
+$navy-dark:    #243455;
+$gray-mid:     #7E8BA7;
+$blue:         #1A8FF1;
+$blue-light:   #EAF7FE;
+$green:        #17A15B;
+$green-light:  #EDF8F2;
+$border-light: #E4E8F0;
+$border-sep:   #F0F2F6;
+$bg-page:      #F8F8F8;
+$bg-card:      #FFFFFF;
+$radius-card:  16px;
+
+// ─── Container override ───────────────────────────────────────────────────────
+.pdp {
+  background: $bg-page;
+  min-height: 100vh;
+  padding-bottom: 4rem;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// BREADCRUMB
+// ════════════════════════════════════════════════════════════════════════════
+.pdp__breadcrumb {
+  padding: 16px 0;
+}
+
+.pdp__breadcrumb-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 4px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pdp__breadcrumb-link {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  color: $blue;
+  text-decoration: none;
+  transition: opacity 150ms ease;
+
+  &:hover { opacity: 0.75; }
+}
+
+.pdp__breadcrumb-sep {
+  display: flex;
+  align-items: center;
+  color: $navy;
+}
+
+.pdp__breadcrumb-current {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  color: $navy;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// CARD PRINCIPAL (Galería + Info)
+// ════════════════════════════════════════════════════════════════════════════
+.pdp__section-main {
+  padding-bottom: 28px;
+}
+
+.pdp__card {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  background: $bg-card;
+  border-radius: $radius-card;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(53, 65, 89, 0.06);
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
+}
+
+// ─── Columna Galería ──────────────────────────────────────────────────────────
+.pdp__gallery-col {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 826px;
+
+  @media (max-width: 900px) {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+// ─── Columna Info ─────────────────────────────────────────────────────────────
+.pdp__info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 428px;
+  flex-shrink: 0;
+
+  @media (max-width: 1100px) {
+    width: 380px;
+  }
+
+  @media (max-width: 900px) {
+    width: 100%;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// PANEL DE INFORMACIÓN — Detalle del CSS del Figma
+// ════════════════════════════════════════════════════════════════════════════
+
+// ─── Meta row: "SOBRE TU UN" + SKU ───────────────────────────────────────────
+.pdp__meta-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.pdp__label-sobre {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  color: $gray-mid;
+}
+
+.pdp__sku {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  color: $gray-mid;
+  text-align: right;
+}
+
+// ─── Título H1 ───────────────────────────────────────────────────────────────
+.pdp__name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: 0.1px;
+  color: $navy;
+  margin: 0 0 20px;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// BLOQUE DE PRECIOS
+// 3 filas: Precio regular | Precio promocional | Exclusivo con tarjeta
+// ════════════════════════════════════════════════════════════════════════════
+.pdp__prices {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 20px;
+}
+
+.pdp__price-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 24px;
+}
+
+.pdp__price-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  color: $navy;
+  flex: 1;
+}
+
+.pdp__price-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+// Precio tachado (original)
+.pdp__price-old {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  text-align: right;
+  text-decoration: line-through;
+  color: $gray-mid;
+}
+
+// Precio actual (promocional)
+.pdp__price-current {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  text-align: right;
+  color: $navy;
+}
+
+// Precio con tarjeta (bold)
+.pdp__price-card-value {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  text-align: right;
+  color: $navy;
+}
+
+// ─── PriceTag — Badge de descuento ───────────────────────────────────────────
+.pdp__price-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  height: 16px;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 15px;
+  letter-spacing: 0.1px;
+  text-transform: uppercase;
+  color: #ffffff;
+  flex-shrink: 0;
+
+  &--dark { background: $navy; }
+  &--blue { background: #00B1FF; }
+}
+
+// ─── Íconos de tarjeta ────────────────────────────────────────────────────────
+.pdp__card-icons {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.pdp__card-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// DESCRIPCIÓN CORTA con bullets
+// ════════════════════════════════════════════════════════════════════════════
+.pdp__description-short {
+  margin-bottom: 20px;
+}
+
+.pdp__description-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  color: $gray-mid;
+  overflow: hidden;
+  transition: max-height 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 9999px;
+
+  &--collapsed {
+    max-height: 120px;
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  }
+}
+
+.pdp__bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 4px;
+
+    &::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: $blue;
+      font-weight: 700;
+    }
+  }
+}
+
+.pdp__ver-mas {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.1px;
+  color: $blue;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  cursor: pointer;
+  transition: opacity 150ms ease;
+
+  &:hover { opacity: 0.75; }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// SELECTOR DE VARIANTES
+// CSS del Figma:
+//   • Primera opción: border: 1px solid #1A8FF1; border-radius: 12px 12px 0 0
+//   • Segunda opción: border-width: 0 1px 1px 1px; border-color: #E4E8F0; border-radius: 0 0 12px 12px
+// ════════════════════════════════════════════════════════════════════════════
+.pdp__variants {
+  margin-bottom: 24px;
+}
+
+.pdp__variants-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  color: $navy;
+  margin: 0 0 16px;
+
+  strong { font-weight: 700; }
+}
+
+.pdp__variant-list {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+// ─── Opción de variante (label como contenedor clickeable) ────────────────────
+.pdp__variant-option {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 20px 0 16px;
+  gap: 16px;
+  height: 80px;
+  background: $bg-card;
+  cursor: pointer;
+  transition: background 150ms ease;
+
+  // Primera opción: borde azul completo, esquinas top redondeadas
+  &--first {
+    border: 1px solid $border-light;
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+  }
+
+  // Primera opción SELECCIONADA
+  &--first#{&}--selected {
+    border-color: $blue;
+    border-bottom: none;
+  }
+
+  // Última opción: borde gris excepto top, esquinas bottom redondeadas
+  &--last {
+    border-width: 0 1px 1px 1px;
+    border-style: solid;
+    border-color: $border-light;
+    border-radius: 0 0 12px 12px;
+  }
+
+  &--selected {
+    background: rgba(26, 143, 241, 0.02);
+  }
+
+  &:hover:not(&--selected) {
+    background: #fafcff;
+  }
+}
+
+// ─── Thumbnail de la variante ─────────────────────────────────────────────────
+.pdp__variant-thumb {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  background: #F8F8F8;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+// ─── Texto de la variante ─────────────────────────────────────────────────────
+.pdp__variant-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pdp__variant-name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  color: $navy;
+}
+
+.pdp__variant-price {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  color: $gray-mid;
+
+  strong {
+    font-weight: 600;
+    color: $blue;
+  }
+}
+
+// ─── Radio Button estilizado ──────────────────────────────────────────────────
+.pdp__radio {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.pdp__radio-input {
+  // Oculto visualmente pero accesible
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  margin: 0;
+  z-index: 1;
+}
+
+// El radio button visual (el cuadrado con borde)
+.pdp__radio::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.2px solid $border-light;
+  border-radius: 4px;
+  background: #fff;
+  transition: border-color 150ms ease;
+}
+
+// Estado: checked → borde azul
+.pdp__radio--checked::after {
+  border-color: $blue;
+}
+
+// El círculo interno del radio checked
+.pdp__radio--checked::before {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: $blue;
+  border-radius: 2px;
+  z-index: 1;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// BOTONES CTA
+// ════════════════════════════════════════════════════════════════════════════
+.pdp__cta-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+// ─── Botón principal: Agregar al carrito ──────────────────────────────────────
+.pdp__btn-cart {
+  flex: 1;
+  height: 48px;
+  background: $green;
+  color: #ffffff;
+  border: none;
+  border-radius: 200px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 200ms ease, transform 100ms ease, box-shadow 200ms ease;
+
+  &:hover:not(:disabled) {
+    background: color.adjust(#17A15B, $lightness: -8%);
+    box-shadow: 0 4px 12px rgba(23, 161, 91, 0.35);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background: #B2C8BC;
+    cursor: not-allowed;
+  }
+}
+
+// ─── Spinner de loading ───────────────────────────────────────────────────────
+.pdp__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: pdp-spin 0.7s linear infinite;
+}
+
+@keyframes pdp-spin {
+  to { transform: rotate(360deg); }
+}
+
+// ─── Botón toggle favorito ────────────────────────────────────────────────────
+.pdp__btn-fav {
+  width: 48px;
+  height: 48px;
+  border-radius: 200px;
+  background: $green-light;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 200ms ease, transform 100ms ease;
+
+  &:hover {
+    background: color.adjust(#EDF8F2, $lightness: -5%);
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+
+  &--active {
+    background: rgba(23, 161, 91, 0.15);
+  }
+}
+
+// ─── Error Toast ──────────────────────────────────────────────────────────────
+.pdp__error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 16px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #B91C1C;
+
+  button {
+    background: none;
+    border: none;
+    color: #B91C1C;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// ACORDEONES — Sección separada de la card principal
+// ════════════════════════════════════════════════════════════════════════════
+.pdp__accordions-section {
+  margin-bottom: 28px;
+  border-radius: $radius-card;
+  overflow: hidden;
+  // La primera y última border-radius la maneja el overflow: hidden del wrapper
+}
+
+// Los estilos del acordeón están en el propio AccordionItemComponent (encapsulados).
+// Aquí solo ajustamos el contenedor.
+
+// Estilos del body del acordeón (proyectados vía ng-content)
+.pdp__accordion-text {
+  margin: 0 0 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  color: $gray-mid;
+
+  &:last-child { margin-bottom: 0; }
+}
+
+.pdp__accordion-list {
+  margin: 0;
+  padding-left: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  li {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+    color: $gray-mid;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// CROSS-SELLING — "Lo más buscado"
+// ════════════════════════════════════════════════════════════════════════════
+.pdp__cross-selling {
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.pdp__cross-selling-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.pdp__cross-selling-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.1px;
+  color: $navy;
+  margin: 0;
+}
+
+.pdp__cross-selling-link {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  color: $blue;
+  text-decoration: none;
+  transition: opacity 150ms ease;
+
+  &:hover { opacity: 0.75; }
+}
+
+// ─── Carrusel horizontal con scroll snap ──────────────────────────────────────
+.pdp__carousel {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none;  // IE/Edge
+  padding-bottom: 8px;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+.pdp__carousel-item {
+  scroll-snap-align: start;
+  flex: 0 0 calc(25% - 12px);
+  min-width: 220px;
+
+  @media (max-width: 1024px) {
+    flex: 0 0 calc(33.333% - 11px);
+  }
+
+  @media (max-width: 768px) {
+    flex: 0 0 calc(50% - 8px);
+  }
+
+  @media (max-width: 480px) {
+    flex: 0 0 calc(85% - 8px);
+  }
+}
+
+// ─── Nav Arrows del carrusel ──────────────────────────────────────────────────
+.pdp__carousel-nav {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 8px;
+}
+
+.pdp__carousel-arrow {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid $border-light;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 150ms ease, box-shadow 150ms ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+
+  &:hover {
+    background: #f4f7fd;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// SKELETON DE CARGA GLOBAL
+// ════════════════════════════════════════════════════════════════════════════
+.pdp__loading {
+  padding: 24px 0;
+}
+
+.pdp__loading-card {
+  display: flex;
+  gap: 16px;
+  background: #fff;
+  border-radius: $radius-card;
+  padding: 24px;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
+}
+
+.pdp__loading-gallery {
+  flex: 1;
+  display: flex;
+  gap: 16px;
+}
+
+.pdp__loading-thumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pdp__loading-info {
+  width: 428px;
+  flex-shrink: 0;
+
+  @media (max-width: 900px) {
+    width: 100%;
+  }
+}

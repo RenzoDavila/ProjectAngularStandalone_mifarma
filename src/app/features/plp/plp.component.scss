@@ -1,0 +1,232 @@
+@use '../../../design-tokens/tokens.base' as base;
+
+.plp {
+  min-height: 100vh;
+  padding-bottom: base.$spacing-16;
+}
+
+// ─── Hero PLP ────────────────────────────────────────────────────────────────
+.plp__hero {
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-primary) 0%,
+    var(--color-brand-primary-dark) 100%
+  );
+  padding: base.$spacing-10 0 base.$spacing-12;
+  // Usa una variable local para el valor negativo (SCSS no permite -namespace.var)
+  $hero-overlap: base.$spacing-6;
+  margin-bottom: calc(-1 * #{$hero-overlap});
+}
+
+.plp__title {
+  font-size: base.$font-size-3xl;
+  font-weight: base.$font-weight-bold;
+  color: var(--color-text-on-brand);
+  line-height: base.$line-height-tight;
+  margin-bottom: base.$spacing-2;
+
+  @include base.respond-to('md') {
+    font-size: base.$font-size-4xl;
+  }
+}
+
+.plp__subtitle {
+  font-size: base.$font-size-base;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: base.$spacing-6;
+  max-width: 480px;
+}
+
+// ─── Buscador ────────────────────────────────────────────────────────────────
+.plp__search-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: base.$spacing-3;
+  max-width: 640px;
+}
+
+.plp__search-box {
+  position: relative;
+  background: var(--color-bg-card);
+  border-radius: base.$radius-full;
+  box-shadow: base.$shadow-xl;
+  display: flex;
+  align-items: center;
+  padding: 0 base.$spacing-5;
+  gap: base.$spacing-3;
+  transition: box-shadow base.$transition-fast;
+
+  &:focus-within {
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.3), base.$shadow-xl;
+  }
+}
+
+.plp__search-icon {
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+}
+
+.plp__search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: base.$spacing-4 0;
+  font-size: base.$font-size-base;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+
+  &::placeholder { color: var(--color-text-secondary); }
+
+  // Ocultar el botón nativo de clear en WebKit
+  &::-webkit-search-cancel-button { display: none; }
+}
+
+.plp__search-clear {
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: base.$spacing-1;
+  border-radius: base.$radius-full;
+  transition: all base.$transition-fast;
+
+  &:hover {
+    background: var(--color-border);
+    color: var(--color-text-primary);
+  }
+}
+
+.plp__search-hint {
+  font-size: base.$font-size-sm;
+  color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  gap: base.$spacing-2;
+  flex-wrap: wrap;
+
+  strong { font-weight: base.$font-weight-semibold; }
+}
+
+.plp__search-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.15rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: base.$font-weight-semibold;
+  letter-spacing: 0.03em;
+}
+
+// ─── Categorías ───────────────────────────────────────────────────────────────
+.plp__categories {
+  padding-block: base.$spacing-6;
+}
+
+.plp__category-list {
+  display: flex;
+  gap: base.$spacing-2;
+  overflow-x: auto;
+  padding-block: base.$spacing-2;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+.plp__category-btn {
+  flex-shrink: 0;
+  padding: base.$spacing-2 base.$spacing-5;
+  border: 1.5px solid var(--color-border);
+  border-radius: base.$radius-full;
+  font-size: base.$font-size-sm;
+  font-weight: base.$font-weight-medium;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-card);
+  cursor: pointer;
+  transition: all base.$transition-fast;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: var(--color-brand-primary);
+    color: var(--color-brand-primary);
+  }
+
+  &--active {
+    background: var(--color-brand-primary);
+    border-color: var(--color-brand-primary);
+    color: white;
+    font-weight: base.$font-weight-semibold;
+  }
+}
+
+// ─── Grid Section ────────────────────────────────────────────────────────────
+.plp__grid-section {
+  padding-top: base.$spacing-4;
+}
+
+.plp__results-count {
+  font-size: base.$font-size-sm;
+  color: var(--color-text-secondary);
+  margin-bottom: base.$spacing-4;
+}
+
+.plp__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: base.$spacing-4;
+
+  @include base.respond-to('md') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include base.respond-to('lg') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @include base.respond-to('xl') {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+// ─── Skeleton Cards ──────────────────────────────────────────────────────────
+.product-card-skeleton {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+// ─── Estado vacío ────────────────────────────────────────────────────────────
+.plp__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: base.$spacing-4;
+  padding: base.$spacing-16 base.$spacing-4;
+  text-align: center;
+  color: var(--color-text-secondary);
+
+  svg { opacity: 0.3; }
+
+  p {
+    font-size: base.$font-size-lg;
+    strong { color: var(--color-text-primary); }
+  }
+}
+
+.btn--secondary {
+  padding: base.$spacing-3 base.$spacing-6;
+  border: 1.5px solid var(--color-brand-primary);
+  color: var(--color-brand-primary);
+  border-radius: var(--radius-button);
+  font-size: base.$font-size-sm;
+  font-weight: base.$font-weight-semibold;
+  background: transparent;
+  transition: all base.$transition-fast;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-brand-primary);
+    color: white;
+  }
+}

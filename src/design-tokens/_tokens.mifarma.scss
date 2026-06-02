@@ -1,0 +1,34 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// DESIGN TOKENS — MIFARMA BRAND
+//
+// Misma estructura que Inkafarma, diferente paleta.
+// La separación estricta de tokens permite un cambio de marca sin
+// modificar un solo componente — solo se cambia [data-brand].
+// ═══════════════════════════════════════════════════════════════════════════
+@use './tokens.base' as base;
+
+// ─── Paleta Mifarma ─────────────────────────────────────────────────────────
+// Color primario: Rojo/Coral Mifarma
+$color-primary-500: hsl(352, 78%, 46%);  // ← Color principal Mifarma #CC1D35
+$color-primary-100: hsl(352, 70%, 92%);
+$color-primary-600: hsl(352, 80%, 36%);
+$color-primary-700: hsl(352, 82%, 26%);
+
+// Acento: Naranja cálido
+$color-accent-500: hsl(22, 95%, 55%);
+$color-accent-600: hsl(22, 93%, 45%);
+
+// ─── CSS Custom Properties ───────────────────────────────────────────────────
+[data-brand="mifarma"] {
+  --color-brand-primary:        #{$color-primary-500};
+  --color-brand-primary-light:  #{$color-primary-100};
+  --color-brand-primary-dark:   #{$color-primary-700};
+  --color-brand-accent:         #{$color-accent-500};
+  --color-brand-accent-hover:   #{$color-accent-600};
+
+  --color-bg-header:   #{$color-primary-500};
+  --color-bg-footer:   #{$color-primary-700};
+  --color-text-price:  #{$color-primary-600};
+
+  --color-border-focus: #{$color-primary-500};
+}

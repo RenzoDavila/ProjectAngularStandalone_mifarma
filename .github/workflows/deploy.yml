@@ -1,0 +1,142 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# GitHub Actions — CI/CD Pipeline para Deploy en Hostinger VPS
+# Archivo: .github/workflows/deploy.yml
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# SECRETS REQUERIDOS (configurar en GitHub → Settings → Secrets and variables → Actions):
+#   VPS_HOST      → IP o dominio del VPS Hostinger
+#   VPS_USER      → Usuario SSH (generalmente 'root' o usuario dedicado)
+#   VPS_SSH_KEY   → Llave privada SSH (cat ~/.ssh/id_rsa | pbcopy)
+#   VPS_PORT      → Puerto SSH (default: 22)
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: 🚀 Deploy Angular SSR → Hostinger VPS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:        # Permite trigger manual desde GitHub UI
+
+env:
+  NODE_VERSION: '20'
+  APP_DIR: '/var/www/mifarma'
+
+jobs:
+  # ─── JOB 1: Tests y Build ──────────────────────────────────────────────────
+  build-and-test:
+    name: 🧪 Test & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout código
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📦 Instalar dependencias
+        run: npm ci --prefer-offline
+
+      - name: 🧪 Ejecutar tests (Jest)
+        run: npm test -- --passWithNoTests --forceExit
+        env:
+          CI: true
+
+      - name: 🏗️ Build SSR (producción)
+        run: npm run build
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
+
+      # Sube el build como artifact para el job de deploy
+      - name: 📤 Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-ssr
+          path: dist/
+          retention-days: 1
+
+  # ─── JOB 2: Deploy al VPS ─────────────────────────────────────────────────
+  deploy:
+    name: 🚀 Deploy → VPS Hostinger
+    runs-on: ubuntu-latest
+    needs: build-and-test      # Solo corre si el build exitoso
+    environment: production    # Requiere aprobación manual (opcional)
+
+    steps:
+      - name: ⬇️ Checkout código
+        uses: actions/checkout@v4
+
+      - name: 📥 Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-ssr
+          path: dist/
+
+      - name: 🔑 Configurar SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: 🌐 Agregar VPS a known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H -p ${{ secrets.VPS_PORT || 22 }} ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: 📤 Subir build al VPS via rsync
+        run: |
+          rsync -avz --delete \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            -e "ssh -p ${{ secrets.VPS_PORT || 22 }}" \
+            ./dist/ \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:${{ env.APP_DIR }}/dist/
+
+      - name: 🔧 Deploy remoto: instalar deps y reiniciar PM2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            set -e  # Abortar en cualquier error
+
+            echo "📁 Accediendo al directorio de la app..."
+            cd ${{ env.APP_DIR }}
+
+            echo "📦 Instalando dependencias de producción..."
+            npm ci --omit=dev --prefer-offline
+
+            echo "🔄 Recargando PM2 (Zero-Downtime Reload)..."
+            # pm2 reload → recarga workers uno a uno (sin downtime)
+            # Si la app no existe aún, la inicia con el ecosystem.config
+            pm2 reload ecosystem.config.js --env production || \
+            pm2 start ecosystem.config.js --env production
+
+            echo "💾 Guardando configuración PM2..."
+            pm2 save
+
+            echo "✅ Deploy completado exitosamente!"
+            pm2 status
+
+      - name: 🩺 Health Check
+        run: |
+          echo "Esperando 10s para que el servidor levante..."
+          sleep 10
+          HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" https://mifarma.tudominio.com)
+          echo "HTTP Status: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "❌ Health check falló con status $HTTP_STATUS"
+            exit 1
+          fi
+          echo "✅ Health check OK ($HTTP_STATUS)"
+
+      - name: 📢 Notificación de Deploy
+        if: always()
+        run: |
+          echo "Deploy finalizado con status: ${{ job.status }}"
+          # Aquí podrías agregar: Slack webhook, Discord, email, etc.
