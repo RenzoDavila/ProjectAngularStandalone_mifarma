@@ -179,6 +179,7 @@ import { CartService, CartItem } from '../../../core/services/cart.service';
 
     .cart-modal__item-info {
       flex: 1;
+      min-width: 0;
     }
 
     .cart-modal__item-name {
@@ -187,6 +188,10 @@ import { CartService, CartItem } from '../../../core/services/cart.service';
       font-size: 14px;
       font-weight: 600;
       color: #1B8F43;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
     }
 
     .cart-modal__item-brand {
@@ -341,6 +346,63 @@ import { CartService, CartItem } from '../../../core/services/cart.service';
       to {
         transform: translate(-50%, -50%);
         opacity: 1;
+      }
+    }
+
+    /* ── Responsive Mobile ───────────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .cart-modal {
+        width: 95%;
+        max-height: 90vh;
+      }
+      .cart-modal__header,
+      .cart-modal__content,
+      .cart-modal__actions {
+        padding: 16px 16px;
+      }
+      /* Mantener botones en una sola fila */
+      .cart-modal__actions {
+        gap: 8px;
+      }
+      .cart-modal__btn {
+        padding: 10px 8px;
+        font-size: 13px;
+      }
+      /* Mantener detalle y precio en una sola fila */
+      .cart-modal__item {
+        padding: 12px;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+      }
+      .cart-modal__item-info {
+        flex: 1;
+        min-width: 0; /* Permite que el ellipsis funcione */
+      }
+      .cart-modal__item-name {
+        margin: 0;
+        font-size: 13px;
+      }
+      .cart-modal__item-brand, .cart-modal__item-variant {
+        display: none; /* Ocultar detalles secundarios para ahorrar espacio si se quiere una sola línea estricta */
+      }
+      .cart-modal__item-price {
+        flex-direction: column;
+        align-items: flex-end;
+        min-width: auto;
+      }
+      .cart-modal__item-total-group {
+        gap: 4px;
+      }
+      .cart-modal__item-quantity {
+        font-size: 11px;
+      }
+      .cart-modal__item-total {
+        font-size: 13px;
+      }
+      .cart-modal__total {
+        padding: 12px;
+        margin-bottom: 16px;
       }
     }
   `]

@@ -60,6 +60,17 @@ import { CartModalComponent } from './shared/components/cart-modal/cart-modal.co
 
           <!-- Acciones del header: Carrito -->
           <nav class="site-header__actions" aria-label="Acciones del usuario">
+            <!-- Hamburger Menu Button -->
+            <button
+              class="site-header__menu-btn"
+              (click)="toggleMobileMenu()"
+              aria-label="Abrir menú"
+              type="button"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M4 6h16M4 12h16M4 18h16" stroke="#354159" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
             <button
               (click)="openCartModal()"
               class="site-header__cart-btn"
@@ -90,13 +101,19 @@ import { CartModalComponent } from './shared/components/cart-modal/cart-modal.co
       </div><!-- /main -->
 
       <!-- 3. Navbar de categorías (content-categories) -->
-      <nav class="site-header__nav" aria-label="Categorías">
+      <div class="site-header__nav-overlay" [class.is-open]="isMobileMenuOpen()" (click)="toggleMobileMenu()"></div>
+      <nav class="site-header__nav" [class.is-open]="isMobileMenuOpen()" aria-label="Categorías">
+        <div class="site-header__nav-header">
+           <span class="site-header__nav-title">Menú</span>
+           <button class="site-header__nav-close" (click)="toggleMobileMenu()">✕</button>
+        </div>
         <div class="site-header__container site-header__nav-inner">
           @for (cat of navCategories; track cat.label) {
             <a
               [routerLink]="cat.route"
               routerLinkActive="site-header__nav-link--active"
               class="site-header__nav-link"
+              (click)="isMobileMenuOpen() ? toggleMobileMenu() : null"
             >
               {{ cat.label }}
             </a>
@@ -348,6 +365,8 @@ import { CartModalComponent } from './shared/components/cart-modal/cart-modal.co
       align-items: center;
       padding: 0 12px;
       gap: 4px;
+
+
       width: 68px;
       height: 40px;
       background: #EAF7FE;
@@ -585,12 +604,161 @@ import { CartModalComponent } from './shared/components/cart-modal/cart-modal.co
       font-size: 12px;
       color: #354159;
     }
+
+    .site-header__menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      padding: 8px;
+      cursor: pointer;
+    }
+    .site-header__nav-overlay {
+      display: none;
+    }
+    .site-header__nav-header {
+      display: none;
+    }
+
+    /* ── Responsive Mobile ───────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .site-header__main {
+        height: auto;
+        padding-block: 12px;
+      }
+      .site-header__main .site-header__container {
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: space-between;
+      }
+      .site-header__logo {
+        width: 140px;
+      }
+      .site-header__search-wrapper {
+        order: 3;
+        flex: 1 1 100%;
+        max-width: 100%;
+      }
+      .site-header__menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .site-header__nav-overlay {
+        display: block;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 998;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        height: 100vh;
+      }
+      .site-header__nav-overlay.is-open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .site-header__nav {
+        position: fixed;
+        top: 0; left: -280px; bottom: 0;
+        width: 280px;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        z-index: 999;
+        transition: left 0.3s ease;
+        padding-top: 0;
+        box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+      }
+      .site-header__nav.is-open {
+        left: 0;
+      }
+      .site-header__nav-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px;
+        border-bottom: 1px solid #eee;
+      }
+      .site-header__nav-title {
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        color: #1B8F43;
+      }
+      .site-header__nav-close {
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: #354159;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .site-header__nav-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px;
+        gap: 0;
+        height: auto;
+        flex: 1;
+        overflow-y: auto;
+        margin: 0;
+      }
+      .site-header__nav-link {
+        width: 100%;
+        padding: 12px 0;
+        height: auto;
+        border-bottom: 1px solid #f0f0f0;
+        justify-content: flex-start;
+        padding-left: 10px !important;
+      }
+      .site-header__nav-link::after {
+        display: none;
+      }
+    }
+
+    /* ── Responsive Mobile Small ─────────────────────────────────────── */
+    @media (max-width: 569px) {
+      .site-header__main .site-header__container {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+      .site-header__logo {
+        width: 100%;
+        justify-content: center;
+        order: 1;
+      }
+      .site-header__search-wrapper {
+        order: 2;
+        width: 100%;
+      }
+      .site-header__actions {
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+        margin-left: 0;
+        gap: 12px;
+      }
+      .site-header__cart-btn {
+        flex: 1;
+      }
+      .site-header__menu-btn {
+        background: #F8F8F8;
+        border-radius: 10px;
+        padding: 0 16px;
+      }
+    }
   `],
 })
 export class App {
   readonly cartService = inject(CartService);
   readonly isCartModalOpen = signal(false);
-  
+  readonly isMobileMenuOpen = signal(false);
+
   cartAnimation = signal(false);
   private initialCartLoad = true;
 
@@ -616,6 +784,10 @@ export class App {
 
   closeCartModal(): void {
     this.isCartModalOpen.set(false);
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen.update(v => !v);
   }
 
   readonly navCategories = [
