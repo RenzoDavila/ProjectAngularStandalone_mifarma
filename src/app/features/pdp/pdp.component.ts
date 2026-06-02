@@ -122,9 +122,6 @@ import { AccordionItemComponent } from '../../shared/components/accordion-item/a
                         {{ selectedVariant()!.originalPrice | currency:'':'':'1.2-2' }}
                       </span>
                     }
-                    <span class="pdp__price-tag pdp__price-tag--dark">
-                      {{ getDiscount(selectedVariant()!) }}%
-                    </span>
                   </div>
                 </div>
 
@@ -136,7 +133,7 @@ import { AccordionItemComponent } from '../../shared/components/accordion-item/a
                       {{ selectedVariant()?.price | currency:'':'':'1.2-2' }}
                     </span>
                     <span class="pdp__price-tag pdp__price-tag--dark">
-                      PEN
+                      {{ getDiscount(selectedVariant()!) }}%
                     </span>
                   </div>
                 </div>
@@ -148,17 +145,17 @@ import { AccordionItemComponent } from '../../shared/components/accordion-item/a
                     <!-- Íconos de tarjetas de crédito -->
                     <span class="pdp__card-icons" aria-label="Agora Pay y tarjetas bancarias">
                       <span class="pdp__card-icon pdp__card-icon--black" aria-hidden="true">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                          <rect x="1" y="4" width="18" height="12" rx="2" fill="#1a1a1a"/>
-                          <rect x="1" y="7" width="18" height="3" fill="#444"/>
-                          <rect x="3" y="12" width="6" height="2" rx="1" fill="#888"/>
+                        <svg width="40" height="20" viewBox="0 0 60 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect width="60" height="30" rx="8" fill="#000000"/>
+                          <text x="10" y="22" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="21" fill="#ffffff" letter-spacing="-0.5">sıp</text>
+                          <circle cx="47" cy="10" r="4.5" fill="#00B1FF"/>
                         </svg>
                       </span>
                       <span class="pdp__card-icon pdp__card-icon--blue" aria-hidden="true">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                          <rect x="1" y="4" width="18" height="12" rx="2" fill="#00B1FF"/>
-                          <rect x="1" y="7" width="18" height="3" fill="rgba(255,255,255,0.3)"/>
-                          <rect x="3" y="12" width="6" height="2" rx="1" fill="rgba(255,255,255,0.7)"/>
+                        <svg width="40" height="20" viewBox="0 0 60 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect width="60" height="30" rx="8" fill="#00B1FF"/>
+                          <text x="10" y="22" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="21" fill="#ffffff" letter-spacing="-0.5">sıp</text>
+                          <circle cx="47" cy="10" r="4.5" fill="#000000"/>
                         </svg>
                       </span>
                     </span>

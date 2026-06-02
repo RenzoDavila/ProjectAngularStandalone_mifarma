@@ -117,7 +117,7 @@ $radius-card:  16px;
 .pdp__info-col {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 28px;
   width: 428px;
   flex-shrink: 0;
 
@@ -181,8 +181,9 @@ $radius-card:  16px;
 .pdp__prices {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .pdp__price-row {
@@ -190,7 +191,9 @@ $radius-card:  16px;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  height: 24px;
+  height: auto;
+  min-height: 24px;
+  gap: 12px;
 }
 
 .pdp__price-label {
@@ -199,15 +202,18 @@ $radius-card:  16px;
   font-size: 13px;
   line-height: 20px;
   letter-spacing: 0.1px;
-  color: $navy;
-  flex: 1;
+  color: $gray-mid;
+  flex: 0 0 auto;
+  min-width: 140px;
 }
 
 .pdp__price-right {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  flex: 1;
+  justify-content: flex-end;
 }
 
 // Precio tachado (original)
@@ -231,6 +237,7 @@ $radius-card:  16px;
   letter-spacing: 0.1px;
   text-align: right;
   color: $navy;
+  flex: 0 0 auto;
 }
 
 // Precio con tarjeta (bold)
@@ -242,48 +249,90 @@ $radius-card:  16px;
   letter-spacing: 0.1px;
   text-align: right;
   color: $navy;
+  flex: 0 0 auto;
 }
 
-// ─── PriceTag — Badge de descuento ───────────────────────────────────────────
+// ─── PriceTag — Badge de descuento con punta de flecha (ribbon style) ───────
 .pdp__price-tag {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 5px;
-  height: 16px;
-  border-radius: 4px;
+  padding: 4px 8px 4px 8px;
+  height: 20px;
+  border-radius: 0 4px 4px 0;
   font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 10px;
-  line-height: 15px;
+  line-height: 14px;
   letter-spacing: 0.1px;
   text-transform: uppercase;
   color: #ffffff;
   flex-shrink: 0;
+  white-space: nowrap;
+  position: relative;
+  margin-left: 4px;
 
-  &--dark { background: $navy; }
-  &--blue { background: #00B1FF; }
+  // Punta de flecha a la izquierda
+  &::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-left: 8px solid;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    transform: rotate(180deg);
+  }
+
+  &--dark {
+    background: #1a1a1a;
+
+    &::before {
+      border-left-color: #1a1a1a;
+    }
+  }
+
+  &--blue {
+    background: #00B1FF;
+
+    &::before {
+      border-left-color: #00B1FF;
+    }
+  }
 }
 
 // ─── Íconos de tarjeta ────────────────────────────────────────────────────────
 .pdp__card-icons {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
+  flex: 0 0 auto;
 }
 
 .pdp__card-icon {
-  width: 20px;
+  width: 30px;
   height: 20px;
   border-radius: 3px;
   overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdp__card-icon svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 // ════════════════════════════════════════════════════════════════════════════
 // DESCRIPCIÓN CORTA con bullets
 // ════════════════════════════════════════════════════════════════════════════
 .pdp__description-short {
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .pdp__description-text {
@@ -347,7 +396,7 @@ $radius-card:  16px;
 //   • Segunda opción: border-width: 0 1px 1px 1px; border-color: #E4E8F0; border-radius: 0 0 12px 12px
 // ════════════════════════════════════════════════════════════════════════════
 .pdp__variants {
-  margin-bottom: 24px;
+  margin-bottom: 0;
 }
 
 .pdp__variants-title {
@@ -381,17 +430,18 @@ $radius-card:  16px;
   cursor: pointer;
   transition: background 150ms ease;
 
-  // Primera opción: borde azul completo, esquinas top redondeadas
+  // Primera opción: borde gris completo, esquinas top redondeadas
   &--first {
     border: 1px solid $border-light;
     border-bottom: none;
     border-radius: 12px 12px 0 0;
+    transition: border-color 150ms ease, background 150ms ease;
   }
 
   // Primera opción SELECCIONADA
   &--first#{&}--selected {
-    border-color: $blue;
-    border-bottom: none;
+    border: 2px solid $blue;
+    background: rgba(26, 143, 241, 0.02);
   }
 
   // Última opción: borde gris excepto top, esquinas bottom redondeadas
@@ -400,6 +450,12 @@ $radius-card:  16px;
     border-style: solid;
     border-color: $border-light;
     border-radius: 0 0 12px 12px;
+  }
+
+  // Última opción SELECCIONADA
+  &--last#{&}--selected {
+    border: 2px solid $blue;
+    background: rgba(26, 143, 241, 0.02);
   }
 
   &--selected {
@@ -480,13 +536,13 @@ $radius-card:  16px;
   z-index: 1;
 }
 
-// El radio button visual (el cuadrado con borde)
+// El radio button visual (círculo con borde)
 .pdp__radio::after {
   content: '';
   position: absolute;
   inset: 0;
-  border: 1.2px solid $border-light;
-  border-radius: 4px;
+  border: 1.5px solid $border-light;
+  border-radius: 50%;
   background: #fff;
   transition: border-color 150ms ease;
 }
@@ -494,6 +550,7 @@ $radius-card:  16px;
 // Estado: checked → borde azul
 .pdp__radio--checked::after {
   border-color: $blue;
+  border-width: 2px;
 }
 
 // El círculo interno del radio checked
@@ -506,7 +563,7 @@ $radius-card:  16px;
   left: 50%;
   transform: translate(-50%, -50%);
   background: $blue;
-  border-radius: 2px;
+  border-radius: 50%;
   z-index: 1;
 }
 
@@ -518,6 +575,7 @@ $radius-card:  16px;
   flex-direction: row;
   align-items: center;
   gap: 8px;
+  margin-top: 0;
 }
 
 // ─── Botón principal: Agregar al carrito ──────────────────────────────────────
@@ -539,6 +597,7 @@ $radius-card:  16px;
   justify-content: center;
   gap: 8px;
   transition: background 200ms ease, transform 100ms ease, box-shadow 200ms ease;
+  margin-top: auto;
 
   &:hover:not(:disabled) {
     background: color.adjust(#17A15B, $lightness: -8%);
@@ -602,7 +661,7 @@ $radius-card:  16px;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 8px;
   padding: 10px 16px;
   background: #FEF2F2;
   border: 1px solid #FECACA;
@@ -610,6 +669,7 @@ $radius-card:  16px;
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   color: #B91C1C;
+  width: 100%;
 
   button {
     background: none;
